@@ -1127,7 +1127,7 @@ order by trace_column_id
         }
 
 // ReSharper disable UnusedMember.Global
-        public void SetFilter(int columnId, int logicalOperator,int comparisonOperator,int? value)
+        public void SetFilter(int columnId, int logicalOperator,int comparisonOperator,long? value)
 // ReSharper restore UnusedMember.Global
         {
             SqlCommand cmd = new SqlCommand { Connection = m_Conn, CommandText = "sp_trace_setfilter", CommandType = CommandType.StoredProcedure };
@@ -1141,7 +1141,52 @@ order by trace_column_id
             }
             else
             {
-                cmd.Parameters.Add("@value", SqlDbType.Int).Value = value;
+                switch (columnId)
+                {
+                    case ProfilerEventColumns.BigintData1:
+                    case ProfilerEventColumns.BigintData2:
+                    case ProfilerEventColumns.Duration:
+                    case ProfilerEventColumns.EventSequence:
+                    case ProfilerEventColumns.ObjectID2:
+                    case ProfilerEventColumns.Permissions:
+                    case ProfilerEventColumns.Reads:
+                    case ProfilerEventColumns.RowCounts:
+                    case ProfilerEventColumns.TransactionID:
+                    case ProfilerEventColumns.Writes:
+                    case ProfilerEventColumns.XactSequence:
+                        cmd.Parameters.Add("@value", SqlDbType.BigInt).Value = value;
+                        break;
+                    case ProfilerEventColumns.ClientProcessID:
+                    case ProfilerEventColumns.ColumnPermissions:
+                    case ProfilerEventColumns.CPU:
+                    case ProfilerEventColumns.DatabaseID:
+                    case ProfilerEventColumns.Error:
+                    case ProfilerEventColumns.EventClass:
+                    case ProfilerEventColumns.EventSubClass:
+                    case ProfilerEventColumns.Handle:
+                    case ProfilerEventColumns.IndexID:
+                    case ProfilerEventColumns.IntegerData:
+                    case ProfilerEventColumns.IntegerData2:
+                    case ProfilerEventColumns.IsSystem:
+                    case ProfilerEventColumns.LineNumber:
+                    case ProfilerEventColumns.Mode:
+                    case ProfilerEventColumns.NestLevel:
+                    case ProfilerEventColumns.ObjectID:
+                    case ProfilerEventColumns.ObjectType:
+                    case ProfilerEventColumns.Offset:
+                    case ProfilerEventColumns.OwnerID:
+                    case ProfilerEventColumns.RequestID:
+                    case ProfilerEventColumns.Severity:
+                    case ProfilerEventColumns.SourceDatabaseID:
+                    case ProfilerEventColumns.SPID:
+                    case ProfilerEventColumns.State:
+                    case ProfilerEventColumns.Success:
+                    case ProfilerEventColumns.Type:
+                        cmd.Parameters.Add("@value", SqlDbType.Int).Value = value;
+                        break;
+                    default:
+                        throw new Exception(String.Format("Unsupported column_id: {0}",columnId));
+                }
             }
             cmd.ExecuteNonQuery();
         }
