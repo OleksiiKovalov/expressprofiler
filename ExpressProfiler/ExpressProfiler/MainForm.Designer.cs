@@ -56,7 +56,6 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnBatchStarting = new System.Windows.Forms.ToolStripMenuItem();
             this.mnBatchCompleted = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.reTextData = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -222,8 +221,7 @@
             this.mnRPCCompleted,
             this.toolStripMenuItem2,
             this.mnBatchStarting,
-            this.mnBatchCompleted,
-            this.toolStripMenuItem3});
+            this.mnBatchCompleted});
             this.cbSelectEvents.Image = ((System.Drawing.Image)(resources.GetObject("cbSelectEvents.Image")));
             this.cbSelectEvents.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cbSelectEvents.Name = "cbSelectEvents";
@@ -285,11 +283,6 @@
             this.mnBatchCompleted.Size = new System.Drawing.Size(171, 22);
             this.mnBatchCompleted.Text = "Batch:Completed";
             this.mnBatchCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(168, 6);
             // 
             // splitContainer1
             // 
@@ -398,7 +391,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnBatchCompleted;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripComboBox tbAuth;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
