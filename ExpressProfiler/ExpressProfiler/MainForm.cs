@@ -6,8 +6,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
 
 
 namespace ExpressProfiler
@@ -27,21 +30,36 @@ namespace ExpressProfiler
         private readonly ProfilerEvent m_EventStarted = new ProfilerEvent();
         private readonly ProfilerEvent m_EventStopped = new ProfilerEvent();
         private readonly ProfilerEvent m_EventPaused = new ProfilerEvent();
-        private readonly List<ListViewItem> m_Cached = new List<ListViewItem>(1024);
+        internal readonly List<ListViewItem> m_Cached = new List<ListViewItem>(1024);
         private readonly Dictionary<string,ListViewItem> m_itembysql = new Dictionary<string, ListViewItem>();
         private string m_servername = "";
         private string m_username = "";
         private string m_userpassword = "";
         private int m_maxEvents = 1000;
+        internal int lastpos = -1;
+        internal string lastpattern = "";
         private ListViewNF lvEvents;
         Queue<ProfilerEvent> m_events = new Queue<ProfilerEvent>(10);
-        private bool m_autostart = false;
+        private bool m_autostart;
+        private bool dontUpdateSource;
 
         public MainForm()
         {
             InitializeComponent();
             InitLV();
-            Text = "Express Profiler v1.3";
+            Text = "Express Profiler v1.4";
+            edPassword.TextBox.PasswordChar = '*';
+            m_servername = Properties.Settings.Default.ServerName;
+            m_username = Properties.Settings.Default.UserName;
+            edDuration.Text = Properties.Settings.Default.Duration.ToString(CultureInfo.InvariantCulture);
+            int eventMask = Properties.Settings.Default.EventMask;
+            mnExistingConnection.Checked = (eventMask & 1) != 0;
+            mnLoginLogout.Checked = (eventMask & 2) != 0;
+            mnRPCStarting.Checked = (eventMask & 4) != 0;
+            mnRPCCompleted.Checked = (eventMask & 8) != 0;
+            mnBatchStarting.Checked = (eventMask & 16) != 0;
+            mnBatchCompleted.Checked = (eventMask & 32) != 0;
+
             ParseCommandLine();
             edServer.Text = m_servername;
             edUser.Text = m_username;
@@ -107,8 +125,11 @@ namespace ExpressProfiler
         private void UpdateButtons()
         {
             tbStart.Enabled = m_ProfilingState==ProfilingStateEnum.psStopped||m_ProfilingState==ProfilingStateEnum.psPaused;
+            startTraceToolStripMenuItem.Enabled = tbStart.Enabled;
             tbStop.Enabled = m_ProfilingState==ProfilingStateEnum.psPaused||m_ProfilingState==ProfilingStateEnum.psProfiling;
+            stopTraceToolStripMenuItem.Enabled = tbStop.Enabled;
             tbPause.Enabled = m_ProfilingState == ProfilingStateEnum.psProfiling;
+            pauseTraceToolStripMenuItem.Enabled = tbPause.Enabled;
             timer1.Enabled = m_ProfilingState == ProfilingStateEnum.psProfiling;
             edServer.Enabled = m_ProfilingState == ProfilingStateEnum.psStopped;
             tbAuth.Enabled = m_ProfilingState == ProfilingStateEnum.psStopped;
@@ -156,7 +177,21 @@ namespace ExpressProfiler
             lvEvents.Columns.Add("SPID", 80).TextAlign = HorizontalAlignment.Right; 
             lvEvents.Columns.Add("#", 53).TextAlign = HorizontalAlignment.Right;
             lvEvents.ColumnClick += lvEvents_ColumnClick;
+            lvEvents.SelectedIndexChanged += lvEvents_SelectedIndexChanged;
+            lvEvents.VirtualItemsSelectionRangeChanged += LvEventsOnVirtualItemsSelectionRangeChanged;
+            lvEvents.MultiSelect = true;
+            lvEvents.ContextMenuStrip = contextMenuStrip1;
             splitContainer1.Panel1.Controls.Add(lvEvents);
+        }
+
+        private void LvEventsOnVirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs listViewVirtualItemsSelectionRangeChangedEventArgs)
+        {
+            UpdateSourceBox();
+        }
+
+        void lvEvents_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSourceBox();
         }
 
         void lvEvents_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -197,22 +232,29 @@ namespace ExpressProfiler
                             , m_EventCount.ToString(CultureInfo.InvariantCulture),"","",""
                         }
                     );
-                lvi.Tag = new ProfilerEvent();
+                lvi.Tag = evt;//new ProfilerEvent();
                 m_Cached.Add(lvi);
                 if (last)
                 {
                     lvEvents.VirtualListSize = m_Cached.Count;
+                    lvEvents.SelectedIndices.Clear();
                     if (tbScroll.Checked)
                     {
-                        lvEvents.Items[m_Cached.Count - 1].Focused = true;
-                        lvEvents.Items[m_Cached.Count - 1].Selected = true;
-                        listView1_ItemSelectionChanged_1(lvEvents, null);
-                        lvEvents.EnsureVisible(m_Cached.Count - 1);
+                        FocusLVI(lvEvents.Items[m_Cached.Count - 1]);
+//                        lvEvents.EnsureVisible(m_Cached.Count - 1);
                     }
 
                     lvEvents.Invalidate(lvi.Bounds);
                 }
             }
+        }
+
+        internal void FocusLVI(ListViewItem lvi)
+        {
+            lvi.Focused = true;
+            lvi.Selected = true;
+            listView1_ItemSelectionChanged_1(lvEvents, null);
+            lvEvents.EnsureVisible(lvEvents.Items.IndexOf(lvi));
         }
 
         private void ProfilerThread(Object state)
@@ -308,6 +350,7 @@ namespace ExpressProfiler
                 {
                     m_Rdr.SetFilter(ProfilerEventColumns.Duration, LogicalOperators.AND, ComparisonOperators.GreaterThanOrEqual, dur*1000);
                 }
+                Properties.Settings.Default.Duration = dur >= 0 ? dur : 0;
             }
             m_Cmd.Connection = m_Conn;
             m_Cmd.CommandTimeout = 0;
@@ -317,6 +360,19 @@ namespace ExpressProfiler
             m_itembysql.Clear();
             lvEvents.VirtualListSize = 0;
             StartProfilerThread();
+            m_servername = edServer.Text;
+            m_username = edUser.Text;
+            Properties.Settings.Default.ServerName = m_servername;
+            Properties.Settings.Default.UserName = tbAuth.SelectedIndex==0?"":m_username;
+            int eventMask = 0;
+            if (mnExistingConnection.Checked) eventMask |= 1;
+            if (mnLoginLogout.Checked) eventMask |= 2;
+            if (mnRPCStarting.Checked) eventMask |= 4;
+            if (mnRPCCompleted.Checked) eventMask |= 8;
+            if (mnBatchStarting.Checked) eventMask |= 16;
+            if (mnBatchCompleted.Checked) eventMask |= 32;
+            Properties.Settings.Default.EventMask = eventMask;
+            Properties.Settings.Default.Save();
             UpdateButtons();
         }
 
@@ -368,16 +424,23 @@ namespace ExpressProfiler
 
         private void listView1_ItemSelectionChanged_1(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            ListViewItem lvi = lvEvents.FocusedItem;
-            if (lvi == null)
-            {
-                reTextData.Text = "";
-            }
-            else
-            {
-                m_Lex.FillRichEdit(reTextData, lvi.SubItems[1].Text);            
-            }
 
+            UpdateSourceBox();
+        }
+
+        private void UpdateSourceBox()
+        {
+            if (dontUpdateSource) return;
+            StringBuilder sb = new StringBuilder();
+            foreach (int i in lvEvents.SelectedIndices)
+            {
+                ListViewItem lv = m_Cached[i];
+                if (lv.SubItems[1].Text != "")
+                {
+                    sb.AppendFormat("{0}\r\ngo\r\n", lv.SubItems[1].Text);
+                }
+            }
+            m_Lex.FillRichEdit(reTextData, sb.ToString());
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -411,12 +474,32 @@ namespace ExpressProfiler
             UpdateButtons();
         }
 
+
+        internal void SelectAllEvents(bool select)
+        {
+            lock (m_Cached)
+            {
+                lvEvents.BeginUpdate();
+                dontUpdateSource = true;
+                try
+                {
+
+                    foreach (ListViewItem lv in m_Cached)
+                    {
+                        lv.Selected = select;
+                    }
+                }
+                finally
+                {
+                    dontUpdateSource = false;
+                    UpdateSourceBox();
+                    lvEvents.EndUpdate();
+                }
+            }
+        }
+
         private void lvEvents_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control &&e.Shift && e.KeyCode == Keys.Delete)
-            {
-                ClearTrace();
-            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -453,7 +536,7 @@ namespace ExpressProfiler
 
         private void existingConnectionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (sender as ToolStripMenuItem).Checked = !(sender as ToolStripMenuItem).Checked;
+            ((ToolStripMenuItem) sender).Checked = !((ToolStripMenuItem) sender).Checked;
             UpdateButtons();
         }
 
@@ -479,5 +562,166 @@ namespace ExpressProfiler
             ClearTrace();
         }
 
+        private void NewAttribute(XmlNode node, string name, string value)
+        {
+            XmlAttribute attr = node.OwnerDocument.CreateAttribute(name);
+            attr.Value = value;
+            node.Attributes.Append(attr);
+        }
+
+        private void copyAllToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyEventsToClipboard(false);
+        }
+
+        private void CopyEventsToClipboard(bool copySelected)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlNode root = doc.CreateElement("events");
+            lock (m_Cached)
+            {
+                if (copySelected)
+                {
+                    foreach (int i in lvEvents.SelectedIndices)
+                    {
+                        CreateEventRow((ProfilerEvent)(m_Cached[i]).Tag, root);
+                    }
+                }
+                else
+                {
+                    foreach (var i in m_Cached)
+                    {
+                        CreateEventRow((ProfilerEvent)i.Tag, root);
+                    }
+                }
+            }
+            doc.AppendChild(root);
+            doc.PreserveWhitespace = true;
+            using (StringWriter writer = new StringWriter())
+            {
+                XmlTextWriter textWriter = new XmlTextWriter(writer) {Formatting = Formatting.Indented};
+                doc.Save(textWriter);
+                Clipboard.SetText(writer.ToString());
+            }
+            MessageBox.Show("Event(s) data copied to clipboard", "Information", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+        }
+
+        private void CreateEventRow(ProfilerEvent evt, XmlNode root)
+        {
+            XmlNode row = root.OwnerDocument.CreateElement("event");
+            NewAttribute(row, "EventClass", evt.EventClass.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "CPU", evt.CPU.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "Reads", evt.Reads.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "Writes", evt.Writes.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "Duration", evt.Duration.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "SPID", evt.SPID.ToString(CultureInfo.InvariantCulture));
+            NewAttribute(row, "LoginName", evt.LoginName);
+            row.InnerText = evt.TextData;
+            root.AppendChild(row);
+        }
+
+        private void copySelectedToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyEventsToClipboard(true);
+        }
+
+        private void clearTraceWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearTrace();
+        }
+
+        private void extractAllEventsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyEventsToClipboard(false);
+        }
+
+        private void extractSelectedEventsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyEventsToClipboard(true);
+        }
+
+        private void startTraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartProfiling();
+        }
+
+        private void pauseTraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PauseProfiling();
+        }
+
+        private void stopTraceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StopProfiling();
+        }
+
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoFind();
+        }
+
+        private void DoFind()
+        {
+            if (m_ProfilingState == ProfilingStateEnum.psProfiling)
+            {
+                MessageBox.Show("You cannot find when trace is running", "ExpressProfiler", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                return;
+            }
+            using (FindForm f = new FindForm())
+            {
+                f.mainForm = this;
+                f.ShowDialog();
+            }
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lvEvents.Focused && (m_ProfilingState!=ProfilingStateEnum.psProfiling))
+            {
+                SelectAllEvents(true);
+            }
+            else
+            if (reTextData.Focused)
+            {
+                reTextData.SelectAll();
+            }
+        }
+
+        internal void PerformFind()
+        {
+            if(String.IsNullOrEmpty(lastpattern)) return;
+            for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) + 1; i < m_Cached.Count; i++)
+            {
+                ListViewItem lvi = m_Cached[i];
+                ProfilerEvent evt = (ProfilerEvent)lvi.Tag;
+                if (evt.TextData.Contains(lastpattern))
+                {
+                    lvi.Focused = true;
+                    lastpos = i;
+                    SelectAllEvents(false);
+                    FocusLVI(lvi);
+                    return;
+                }
+            }
+            MessageBox.Show(String.Format("Failed to find \"{0}\". Searched to the end of data. ", lastpattern), "ExpressProfiler", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void findNextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (m_ProfilingState == ProfilingStateEnum.psProfiling)
+            {
+                MessageBox.Show("You cannot find when trace is running", "ExpressProfiler", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                return;
+            }
+            PerformFind();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
