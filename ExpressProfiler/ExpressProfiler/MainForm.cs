@@ -47,7 +47,7 @@ namespace ExpressProfiler
         {
             InitializeComponent();
             InitLV();
-            Text = "Express Profiler v1.4";
+            Text = "Express Profiler v1.5";
             edPassword.TextBox.PasswordChar = '*';
             m_servername = Properties.Settings.Default.ServerName;
             m_username = Properties.Settings.Default.UserName;
@@ -59,6 +59,8 @@ namespace ExpressProfiler
             mnRPCCompleted.Checked = (eventMask & 8) != 0;
             mnBatchStarting.Checked = (eventMask & 16) != 0;
             mnBatchCompleted.Checked = (eventMask & 32) != 0;
+            mnSPStmtCompleted.Checked = (eventMask & 64) != 0;
+            mnSPStmtStarting.Checked = (eventMask & 128) != 0;
 
             ParseCommandLine();
             edServer.Text = m_servername;
@@ -142,6 +144,8 @@ namespace ExpressProfiler
             mnRPCCompleted.Enabled = mnBatchCompleted.Enabled;
             mnLoginLogout.Enabled  = mnBatchCompleted.Enabled;
             mnRPCStarting.Enabled = mnBatchCompleted.Enabled;
+            mnSPStmtCompleted.Enabled = mnBatchCompleted.Enabled;
+            mnSPStmtStarting.Enabled = mnBatchCompleted.Enabled;
         }
 
 
@@ -174,7 +178,9 @@ namespace ExpressProfiler
             lvEvents.Columns.Add("Reads", 78).TextAlign = HorizontalAlignment.Right;
             lvEvents.Columns.Add("Writes", 78).TextAlign = HorizontalAlignment.Right;
             lvEvents.Columns.Add("Duration, ms", 82).TextAlign = HorizontalAlignment.Right;
-            lvEvents.Columns.Add("SPID", 80).TextAlign = HorizontalAlignment.Right; 
+            lvEvents.Columns.Add("SPID", 50).TextAlign = HorizontalAlignment.Right;
+            lvEvents.Columns.Add("Start time", 140).TextAlign = HorizontalAlignment.Left;
+            lvEvents.Columns.Add("End time", 140).TextAlign = HorizontalAlignment.Left;
             lvEvents.Columns.Add("#", 53).TextAlign = HorizontalAlignment.Right;
             lvEvents.ColumnClick += lvEvents_ColumnClick;
             lvEvents.SelectedIndexChanged += lvEvents_SelectedIndexChanged;
@@ -229,6 +235,8 @@ namespace ExpressProfiler
 
                             textData, evt.LoginName, evt.CPU.ToString("#,0",CultureInfo.InvariantCulture), evt.Reads.ToString("#,0",CultureInfo.InvariantCulture)
                             , evt.Writes.ToString("#,0",CultureInfo.InvariantCulture), (evt.Duration/1000).ToString("#,0"), evt.SPID.ToString(CultureInfo.InvariantCulture)
+                            ,evt.StartTime.Year==1?"":evt.StartTime.ToString("yyyy-MM-dd hh:mm:ss.ffff")
+                            ,evt.EndTime.Year==1?"":evt.EndTime.ToString("yyyy-MM-dd hh:mm:ss.ffff")
                             , m_EventCount.ToString(CultureInfo.InvariantCulture),"","",""
                         }
                     );
@@ -305,13 +313,24 @@ namespace ExpressProfiler
                 {
                     m_Rdr.SetEvent(ProfilerEvents.SecurityAudit.AuditLogin,
                                    ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
-                                   ProfilerEventColumns.SPID);
+                                   ProfilerEventColumns.SPID
+                                   ,ProfilerEventColumns.StartTime,ProfilerEventColumns.EndTime
+                                   );
+                    m_Rdr.SetEvent(ProfilerEvents.SecurityAudit.AuditLogout,
+                                   ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
+                                   ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
+                                   ProfilerEventColumns.LoginName,
+                                   ProfilerEventColumns.SPID
+                                   , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                                   );
                 }
 
                 if (mnExistingConnection.Checked)
                 {
                     m_Rdr.SetEvent(ProfilerEvents.Sessions.ExistingConnection,
-                                   ProfilerEventColumns.TextData, ProfilerEventColumns.SPID);
+                                   ProfilerEventColumns.TextData, ProfilerEventColumns.SPID
+                                   , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                                   );
                 }
                 if (mnBatchCompleted.Checked)
                 {
@@ -319,21 +338,27 @@ namespace ExpressProfiler
                                    ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
                                    ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
                                    ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
-                                   ProfilerEventColumns.SPID,
-                                   ProfilerEventColumns.StartTime);
+                                   ProfilerEventColumns.SPID
+                                   , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                                   );
                 }
                 if (mnBatchStarting.Checked)
                 {
                     m_Rdr.SetEvent(ProfilerEvents.TSQL.SQLBatchStarting,
                                    ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
-                                   ProfilerEventColumns.SPID);
+                                   ProfilerEventColumns.SPID
+                                   ,ProfilerEventColumns.StartTime,ProfilerEventColumns.EndTime
+                                   );
                 }
                 if (mnRPCStarting.Checked)
                 {
                     m_Rdr.SetEvent(ProfilerEvents.StoredProcedures.RPCStarting,
                                    ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
-                                   ProfilerEventColumns.SPID);
+                                   ProfilerEventColumns.SPID
+                                   ,ProfilerEventColumns.StartTime,ProfilerEventColumns.EndTime
+                                   );
                 }
+
             }
             if (mnRPCCompleted.Checked)
             {
@@ -341,7 +366,29 @@ namespace ExpressProfiler
                                ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
                                ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
                                ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
-                               ProfilerEventColumns.SPID);
+                               ProfilerEventColumns.SPID
+                               ,ProfilerEventColumns.StartTime,ProfilerEventColumns.EndTime
+                               );
+            }
+            if (mnSPStmtCompleted.Checked)
+            {
+                m_Rdr.SetEvent(ProfilerEvents.StoredProcedures.SPStmtCompleted,
+                               ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
+                               ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
+                               ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
+                               ProfilerEventColumns.SPID
+                               , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                    );
+            }
+            if (mnSPStmtStarting.Checked)
+            {
+                m_Rdr.SetEvent(ProfilerEvents.StoredProcedures.SPStmtStarting,
+                               ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
+                               ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
+                               ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
+                               ProfilerEventColumns.SPID
+                               , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                    );
             }
             int dur;
             if (Int32.TryParse(edDuration.Text, out dur))
@@ -371,13 +418,15 @@ namespace ExpressProfiler
             if (mnRPCCompleted.Checked) eventMask |= 8;
             if (mnBatchStarting.Checked) eventMask |= 16;
             if (mnBatchCompleted.Checked) eventMask |= 32;
+            if (mnSPStmtCompleted.Checked) eventMask |= 64;
+            if (mnSPStmtStarting.Checked) eventMask |= 128;
             Properties.Settings.Default.EventMask = eventMask;
             Properties.Settings.Default.Save();
             UpdateButtons();
         }
 
         private void StartProfilerThread()
-        {
+        { 
             if(m_Rdr!=null)
             {
                 m_Rdr.Close();
