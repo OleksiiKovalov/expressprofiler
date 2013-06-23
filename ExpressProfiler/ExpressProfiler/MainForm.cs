@@ -119,7 +119,7 @@ namespace ExpressProfiler
 
         }
     
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void tbStart_Click(object sender, EventArgs e)
         {
             StartProfiling();
         }
@@ -445,7 +445,7 @@ namespace ExpressProfiler
             UpdateButtons();
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void tbStop_Click(object sender, EventArgs e)
         {
             StopProfiling();
         }
@@ -606,7 +606,7 @@ namespace ExpressProfiler
             }
         }
 
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        private void tbClear_Click(object sender, EventArgs e)
         {
             ClearTrace();
         }

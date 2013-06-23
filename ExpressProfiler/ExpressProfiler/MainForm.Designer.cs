@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.tbClear = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tbScroll = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -55,6 +55,8 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnRPCStarting = new System.Windows.Forms.ToolStripMenuItem();
             this.mnRPCCompleted = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnSPStmtStarting = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnSPStmtCompleted = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnBatchStarting = new System.Windows.Forms.ToolStripMenuItem();
             this.mnBatchCompleted = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,8 +85,6 @@
             this.findNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.clearTraceWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnSPStmtCompleted = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnSPStmtStarting = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -103,7 +103,7 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.tbClear,
             this.toolStripSeparator5,
             this.tbScroll,
             this.toolStripSeparator1,
@@ -129,16 +129,16 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // tbClear
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Silver;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "Clear trace";
-            this.toolStripButton1.ToolTipText = "Clear trace\r\nCtrl+Shift+Del";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click_1);
+            this.tbClear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbClear.Image = global::ExpressProfiler.Properties.Resources.imClear;
+            this.tbClear.ImageTransparentColor = System.Drawing.Color.Silver;
+            this.tbClear.Name = "tbClear";
+            this.tbClear.Size = new System.Drawing.Size(23, 22);
+            this.tbClear.Text = "Clear trace";
+            this.tbClear.ToolTipText = "Clear trace\r\nCtrl+Shift+Del";
+            this.tbClear.Click += new System.EventHandler(this.tbClear_Click);
             // 
             // toolStripSeparator5
             // 
@@ -151,7 +151,7 @@
             this.tbScroll.CheckOnClick = true;
             this.tbScroll.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tbScroll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbScroll.Image = ((System.Drawing.Image)(resources.GetObject("tbScroll.Image")));
+            this.tbScroll.Image = global::ExpressProfiler.Properties.Resources.imScroll;
             this.tbScroll.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tbScroll.Name = "tbScroll";
             this.tbScroll.Size = new System.Drawing.Size(23, 22);
@@ -165,17 +165,17 @@
             // tbStart
             // 
             this.tbStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbStart.Image = ((System.Drawing.Image)(resources.GetObject("tbStart.Image")));
+            this.tbStart.Image = global::ExpressProfiler.Properties.Resources.imStart;
             this.tbStart.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tbStart.Name = "tbStart";
             this.tbStart.Size = new System.Drawing.Size(23, 22);
             this.tbStart.Text = "Start trace";
-            this.tbStart.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.tbStart.Click += new System.EventHandler(this.tbStart_Click);
             // 
             // tbPause
             // 
             this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPause.Image = ((System.Drawing.Image)(resources.GetObject("tbPause.Image")));
+            this.tbPause.Image = global::ExpressProfiler.Properties.Resources.imPause;
             this.tbPause.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tbPause.Name = "tbPause";
             this.tbPause.Size = new System.Drawing.Size(23, 22);
@@ -185,12 +185,12 @@
             // tbStop
             // 
             this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbStop.Image = ((System.Drawing.Image)(resources.GetObject("tbStop.Image")));
+            this.tbStop.Image = global::ExpressProfiler.Properties.Resources.imStop;
             this.tbStop.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tbStop.Name = "tbStop";
             this.tbStop.Size = new System.Drawing.Size(23, 22);
             this.tbStop.Text = "Stop trace";
-            this.tbStop.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
             // 
             // toolStripSeparator2
             // 
@@ -305,6 +305,20 @@
             this.mnRPCCompleted.Size = new System.Drawing.Size(171, 22);
             this.mnRPCCompleted.Text = "RPC:Completed";
             this.mnRPCCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
+            // 
+            // mnSPStmtStarting
+            // 
+            this.mnSPStmtStarting.Name = "mnSPStmtStarting";
+            this.mnSPStmtStarting.Size = new System.Drawing.Size(171, 22);
+            this.mnSPStmtStarting.Text = "SP:StmtStarting";
+            this.mnSPStmtStarting.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
+            // 
+            // mnSPStmtCompleted
+            // 
+            this.mnSPStmtCompleted.Name = "mnSPStmtCompleted";
+            this.mnSPStmtCompleted.Size = new System.Drawing.Size(171, 22);
+            this.mnSPStmtCompleted.Text = "SP:StmtCompleted";
+            this.mnSPStmtCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -423,6 +437,7 @@
             // 
             // startTraceToolStripMenuItem
             // 
+            this.startTraceToolStripMenuItem.Image = global::ExpressProfiler.Properties.Resources.imStart;
             this.startTraceToolStripMenuItem.Name = "startTraceToolStripMenuItem";
             this.startTraceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.startTraceToolStripMenuItem.Text = "Start trace";
@@ -430,6 +445,7 @@
             // 
             // pauseTraceToolStripMenuItem
             // 
+            this.pauseTraceToolStripMenuItem.Image = global::ExpressProfiler.Properties.Resources.imPause;
             this.pauseTraceToolStripMenuItem.Name = "pauseTraceToolStripMenuItem";
             this.pauseTraceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.pauseTraceToolStripMenuItem.Text = "Pause trace";
@@ -437,6 +453,7 @@
             // 
             // stopTraceToolStripMenuItem
             // 
+            this.stopTraceToolStripMenuItem.Image = global::ExpressProfiler.Properties.Resources.imStop;
             this.stopTraceToolStripMenuItem.Name = "stopTraceToolStripMenuItem";
             this.stopTraceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.stopTraceToolStripMenuItem.Text = "Stop trace";
@@ -516,26 +533,13 @@
             // 
             // clearTraceWindowToolStripMenuItem
             // 
+            this.clearTraceWindowToolStripMenuItem.Image = global::ExpressProfiler.Properties.Resources.imClear;
             this.clearTraceWindowToolStripMenuItem.Name = "clearTraceWindowToolStripMenuItem";
             this.clearTraceWindowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.Delete)));
             this.clearTraceWindowToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.clearTraceWindowToolStripMenuItem.Text = "Clear Trace Window";
             this.clearTraceWindowToolStripMenuItem.Click += new System.EventHandler(this.clearTraceWindowToolStripMenuItem_Click);
-            // 
-            // mnSPStmtCompleted
-            // 
-            this.mnSPStmtCompleted.Name = "mnSPStmtCompleted";
-            this.mnSPStmtCompleted.Size = new System.Drawing.Size(171, 22);
-            this.mnSPStmtCompleted.Text = "SP:StmtCompleted";
-            this.mnSPStmtCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnSPStmtStarting
-            // 
-            this.mnSPStmtStarting.Name = "mnSPStmtStarting";
-            this.mnSPStmtStarting.Size = new System.Drawing.Size(171, 22);
-            this.mnSPStmtStarting.Text = "SP:StmtStarting";
-            this.mnSPStmtStarting.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -594,7 +598,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripComboBox tbAuth;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton tbClear;
         private System.Windows.Forms.ToolStripLabel toolStripLabel4;
         private System.Windows.Forms.ToolStripTextBox edDuration;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
