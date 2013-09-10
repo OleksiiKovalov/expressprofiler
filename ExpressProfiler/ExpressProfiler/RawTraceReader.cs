@@ -682,8 +682,220 @@ namespace ExpressProfiler
         }
     }
 
+    public enum ProfilerColumnDataType
+    {
+        Long, DateTime, Byte, Int, String, Guid
+    }
+
+
     public static class ProfilerEventColumns
     {
+        public static readonly string[] ColumnNames =
+            {
+                "Dumy"
+                ,"TextData"
+                ,"BinaryData"
+                ,"DatabaseID"
+                ,"TransactionID"
+                ,"LineNumber"
+                ,"NTUserName"
+                ,"NTDomainName"
+                ,"HostName"
+                ,"ClientProcessID"
+                ,"ApplicationName"
+                ,"LoginName"
+                ,"SPID"
+                ,"Duration"
+                ,"StartTime"
+                ,"EndTime"
+                ,"Reads"
+                ,"Writes"
+                ,"CPU"
+                ,"Permissions"
+                ,"Severity"
+                ,"EventSubClass"
+                ,"ObjectID"
+                ,"Success"
+                ,"IndexID"
+                ,"IntegerData"
+                ,"ServerName"
+                ,"EventClass"
+                ,"ObjectType"
+                ,"NestLevel"
+                ,"State"
+                ,"Error"
+                ,"Mode"
+                ,"Handle"
+                ,"ObjectName"
+                ,"DatabaseName"
+                ,"FileName"
+                ,"OwnerName"
+                ,"RoleName"
+                ,"TargetUserName"
+                ,"DBUserName"
+                ,"LoginSid"
+                ,"TargetLoginName"
+                ,"TargetLoginSid"
+                ,"ColumnPermissions"
+                ,"LinkedServerName"
+                ,"ProviderName"
+                ,"MethodName"
+                ,"RowCounts"
+                ,"RequestID"
+                ,"XactSequence"
+                ,"EventSequence"
+                ,"BigintData1"
+                ,"BigintData2"
+                ,"GUID"
+                ,"IntegerData2"
+                ,"ObjectID2"
+                ,"Type"
+                ,"OwnerID"
+                ,"ParentName"
+                ,"IsSystem"
+                ,"Offset"
+                ,"SourceDatabaseID"
+                ,"SqlHandle"
+                ,"SessionLoginName"
+                ,"PlanHandle"
+            };
+
+        public static readonly ProfilerColumnDataType[] ProfilerColumnDataTypes =
+            {
+                /*dummy*/
+                ProfilerColumnDataType.String
+                /*TextData*/
+                ,ProfilerColumnDataType.String
+                /*BinaryData*/
+                ,ProfilerColumnDataType.Byte
+                /*DatabaseID*/
+                ,ProfilerColumnDataType.Int
+                /*TransactionID*/
+                ,ProfilerColumnDataType.Long
+                /*LineNumber*/
+                ,ProfilerColumnDataType.Int
+                /*NTUserName*/
+                ,ProfilerColumnDataType.String
+                /*NTDomainName*/
+                ,ProfilerColumnDataType.String
+                /*HostName*/
+                ,ProfilerColumnDataType.String
+                /*ClientProcessID*/
+                ,ProfilerColumnDataType.Int
+                /*ApplicationName*/
+                ,ProfilerColumnDataType.String
+                /*LoginName*/
+                ,ProfilerColumnDataType.String
+                /*SPID*/
+                ,ProfilerColumnDataType.Int
+                /*Duration*/
+                ,ProfilerColumnDataType.Long
+                /*StartTime*/
+                ,ProfilerColumnDataType.DateTime
+                /*EndTime*/
+                ,ProfilerColumnDataType.DateTime
+                /*Reads*/
+                ,ProfilerColumnDataType.Long
+                /*Writes*/
+                ,ProfilerColumnDataType.Long
+                /*CPU*/
+                ,ProfilerColumnDataType.Int
+                /*Permissions*/
+                ,ProfilerColumnDataType.Long
+                /*Severity*/
+                ,ProfilerColumnDataType.Int
+                /*EventSubClass*/
+                ,ProfilerColumnDataType.Int
+                /*ObjectID*/
+                ,ProfilerColumnDataType.Int
+                /*Success*/
+                ,ProfilerColumnDataType.Int
+                /*IndexID*/
+                ,ProfilerColumnDataType.Int
+                /*IntegerData*/
+                ,ProfilerColumnDataType.Int
+                /*ServerName*/
+                ,ProfilerColumnDataType.String
+                /*EventClass*/
+                ,ProfilerColumnDataType.Int
+                /*ObjectType*/
+                ,ProfilerColumnDataType.Int
+                /*NestLevel*/
+                ,ProfilerColumnDataType.Int
+                /*State*/
+                ,ProfilerColumnDataType.Int
+                /*Error*/
+                ,ProfilerColumnDataType.Int
+                /*Mode*/
+                ,ProfilerColumnDataType.Int
+                /*Handle*/
+                ,ProfilerColumnDataType.Int
+                /*ObjectName*/
+                ,ProfilerColumnDataType.String
+                /*DatabaseName*/
+                ,ProfilerColumnDataType.String
+                /*FileName*/
+                ,ProfilerColumnDataType.String
+                /*OwnerName*/
+                ,ProfilerColumnDataType.String
+                /*RoleName*/
+                ,ProfilerColumnDataType.String
+                /*TargetUserName*/
+                ,ProfilerColumnDataType.String
+                /*DBUserName*/
+                ,ProfilerColumnDataType.String
+                /*LoginSid*/
+                ,ProfilerColumnDataType.Byte
+                /*TargetLoginName*/
+                ,ProfilerColumnDataType.String
+                /*TargetLoginSid*/
+                ,ProfilerColumnDataType.Byte
+                /*ColumnPermissions*/
+                ,ProfilerColumnDataType.Int
+                /*LinkedServerName*/
+                ,ProfilerColumnDataType.String
+                /*ProviderName*/
+                ,ProfilerColumnDataType.String
+                /*MethodName*/
+                ,ProfilerColumnDataType.String
+                /*RowCounts*/
+                ,ProfilerColumnDataType.Long
+                /*RequestID*/
+                ,ProfilerColumnDataType.Int
+                /*XactSequence*/
+                ,ProfilerColumnDataType.Long
+                /*EventSequence*/
+                ,ProfilerColumnDataType.Long
+                /*BigintData1*/
+                ,ProfilerColumnDataType.Long
+                /*BigintData2*/
+                ,ProfilerColumnDataType.Long
+                /*GUID*/
+                ,ProfilerColumnDataType.Guid
+                /*IntegerData2*/
+                ,ProfilerColumnDataType.Int
+                /*ObjectID2*/
+                ,ProfilerColumnDataType.Long
+                /*Type*/
+                ,ProfilerColumnDataType.Int
+                /*OwnerID*/
+                ,ProfilerColumnDataType.Int
+                /*ParentName*/
+                ,ProfilerColumnDataType.String
+                /*IsSystem*/
+                ,ProfilerColumnDataType.Int
+                /*Offset*/
+                ,ProfilerColumnDataType.Int
+                /*SourceDatabaseID*/
+                ,ProfilerColumnDataType.Int
+                /*SqlHandle*/
+                ,ProfilerColumnDataType.Byte
+                /*SessionLoginName*/
+                ,ProfilerColumnDataType.String
+                /*PlanHandle*/
+                ,ProfilerColumnDataType.Byte
+            };
+
         /*
         select 'public const int '+Name + '= '+cast(trace_column_id as varchar)+';'
         from sys.trace_columns
@@ -764,6 +976,50 @@ namespace ExpressProfiler
         internal ulong m_ColumnMask;
         // ReSharper disable UnusedMember.Global
         // ReSharper disable InconsistentNaming
+
+        /*
+select 'case ProfilerEventColumns.'+Name + ':
+'
++
+case when row_number() over(partition by Type_Name order by trace_column_id desc) = 1 then 
+
+'		return Get'+
+case Type_Name
+						when 'text' then 'String'
+						when 'int' then 'Int'
+						when 'bigint' then 'Long'
+						when 'nvarchar' then 'String'
+						when 'datetime' then 'DateTime'
+						when 'image' then 'Byte'
+						when 'uniqueidentifier' then 'Guid'
+				end
++'(idx);
+'
+else '' end
+from sys.trace_columns
+order by Type_Name,trace_column_id         
+         */
+
+        public string GetFormattedData(int idx, string format)
+        {
+            switch (ProfilerEventColumns.ProfilerColumnDataTypes[idx])
+            {
+                case ProfilerColumnDataType.Long:
+                    return GetLong(idx).ToString(format);
+                case ProfilerColumnDataType.DateTime:
+                    DateTime d = GetDateTime(idx);
+                    return 1==d.Year?"": d.ToString(format);
+                case ProfilerColumnDataType.Byte:
+                    return GetByte(idx).ToString();
+                case ProfilerColumnDataType.Int:
+                    return GetInt(idx).ToString(format);
+                case ProfilerColumnDataType.String:
+                    return GetString(idx);
+                case ProfilerColumnDataType.Guid:
+                    return GetGuid(idx).ToString();
+            }
+            return null;
+        }
 
         private int GetInt(int idx)
         {
