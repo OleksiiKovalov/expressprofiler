@@ -31,12 +31,15 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.slEPS = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tbClear = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.tbScroll = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tbStart = new System.Windows.Forms.ToolStripButton();
+            this.tbStart = new System.Windows.Forms.ToolStripSplitButton();
+            this.tbRun = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbRunWithFilters = new System.Windows.Forms.ToolStripMenuItem();
             this.tbPause = new System.Windows.Forms.ToolStripButton();
             this.tbStop = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -49,29 +52,19 @@
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.edPassword = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.cbSelectEvents = new System.Windows.Forms.ToolStripSplitButton();
-            this.mnExistingConnection = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnLoginLogout = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnRPCStarting = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnRPCCompleted = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnSPStmtStarting = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnSPStmtCompleted = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnBatchStarting = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnBatchCompleted = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
-            this.edDuration = new System.Windows.Forms.ToolStripTextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.reTextData = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyAllToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copySelectedToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.copyToXlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnRun = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnRunWithFilters = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopTraceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
@@ -85,6 +78,9 @@
             this.findNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.clearTraceWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyAllForExcelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -94,11 +90,18 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.slEPS});
             this.statusStrip1.Location = new System.Drawing.Point(0, 488);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(979, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // slEPS
+            // 
+            this.slEPS.Name = "slEPS";
+            this.slEPS.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStrip1
             // 
@@ -119,10 +122,7 @@
             this.edUser,
             this.toolStripLabel3,
             this.edPassword,
-            this.toolStripSeparator3,
-            this.cbSelectEvents,
-            this.toolStripLabel4,
-            this.edDuration});
+            this.toolStripSeparator3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(979, 25);
@@ -165,12 +165,29 @@
             // tbStart
             // 
             this.tbStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbStart.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbRun,
+            this.tbRunWithFilters});
             this.tbStart.Image = global::ExpressProfiler.Properties.Resources.imStart;
             this.tbStart.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tbStart.Name = "tbStart";
-            this.tbStart.Size = new System.Drawing.Size(23, 22);
+            this.tbStart.Size = new System.Drawing.Size(32, 22);
             this.tbStart.Text = "Start trace";
-            this.tbStart.Click += new System.EventHandler(this.tbStart_Click);
+            // 
+            // tbRun
+            // 
+            this.tbRun.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.tbRun.Name = "tbRun";
+            this.tbRun.Size = new System.Drawing.Size(146, 22);
+            this.tbRun.Text = "Run";
+            this.tbRun.Click += new System.EventHandler(this.tbStart_Click);
+            // 
+            // tbRunWithFilters
+            // 
+            this.tbRunWithFilters.Name = "tbRunWithFilters";
+            this.tbRunWithFilters.Size = new System.Drawing.Size(146, 22);
+            this.tbRunWithFilters.Text = "Run with filters";
+            this.tbRunWithFilters.Click += new System.EventHandler(this.tbRunWithFilters_Click);
             // 
             // tbPause
             // 
@@ -250,114 +267,6 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
-            // cbSelectEvents
-            // 
-            this.cbSelectEvents.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.cbSelectEvents.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnExistingConnection,
-            this.mnLoginLogout,
-            this.toolStripMenuItem1,
-            this.mnRPCStarting,
-            this.mnRPCCompleted,
-            this.mnSPStmtStarting,
-            this.mnSPStmtCompleted,
-            this.toolStripMenuItem2,
-            this.mnBatchStarting,
-            this.mnBatchCompleted,
-            this.toolStripMenuItem6});
-            this.cbSelectEvents.Image = ((System.Drawing.Image)(resources.GetObject("cbSelectEvents.Image")));
-            this.cbSelectEvents.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.cbSelectEvents.Name = "cbSelectEvents";
-            this.cbSelectEvents.Size = new System.Drawing.Size(56, 22);
-            this.cbSelectEvents.Text = "Events";
-            // 
-            // mnExistingConnection
-            // 
-            this.mnExistingConnection.Name = "mnExistingConnection";
-            this.mnExistingConnection.Size = new System.Drawing.Size(171, 22);
-            this.mnExistingConnection.Text = "Existing connections";
-            this.mnExistingConnection.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnLoginLogout
-            // 
-            this.mnLoginLogout.Name = "mnLoginLogout";
-            this.mnLoginLogout.Size = new System.Drawing.Size(171, 22);
-            this.mnLoginLogout.Text = "Audit login/logout";
-            this.mnLoginLogout.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(168, 6);
-            // 
-            // mnRPCStarting
-            // 
-            this.mnRPCStarting.Name = "mnRPCStarting";
-            this.mnRPCStarting.Size = new System.Drawing.Size(171, 22);
-            this.mnRPCStarting.Text = "RPC:Starting";
-            this.mnRPCStarting.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnRPCCompleted
-            // 
-            this.mnRPCCompleted.Checked = true;
-            this.mnRPCCompleted.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnRPCCompleted.Name = "mnRPCCompleted";
-            this.mnRPCCompleted.Size = new System.Drawing.Size(171, 22);
-            this.mnRPCCompleted.Text = "RPC:Completed";
-            this.mnRPCCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnSPStmtStarting
-            // 
-            this.mnSPStmtStarting.Name = "mnSPStmtStarting";
-            this.mnSPStmtStarting.Size = new System.Drawing.Size(171, 22);
-            this.mnSPStmtStarting.Text = "SP:StmtStarting";
-            this.mnSPStmtStarting.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnSPStmtCompleted
-            // 
-            this.mnSPStmtCompleted.Name = "mnSPStmtCompleted";
-            this.mnSPStmtCompleted.Size = new System.Drawing.Size(171, 22);
-            this.mnSPStmtCompleted.Text = "SP:StmtCompleted";
-            this.mnSPStmtCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 6);
-            // 
-            // mnBatchStarting
-            // 
-            this.mnBatchStarting.Name = "mnBatchStarting";
-            this.mnBatchStarting.Size = new System.Drawing.Size(171, 22);
-            this.mnBatchStarting.Text = "Batch:Starting";
-            this.mnBatchStarting.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // mnBatchCompleted
-            // 
-            this.mnBatchCompleted.Checked = true;
-            this.mnBatchCompleted.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mnBatchCompleted.Name = "mnBatchCompleted";
-            this.mnBatchCompleted.Size = new System.Drawing.Size(171, 22);
-            this.mnBatchCompleted.Text = "Batch:Completed";
-            this.mnBatchCompleted.Click += new System.EventHandler(this.existingConnectionsToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(168, 6);
-            // 
-            // toolStripLabel4
-            // 
-            this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(87, 22);
-            this.toolStripLabel4.Text = "Duration, ms >=";
-            // 
-            // edDuration
-            // 
-            this.edDuration.Name = "edDuration";
-            this.edDuration.Size = new System.Drawing.Size(100, 25);
-            this.edDuration.Text = "0";
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -391,9 +300,11 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyAllToClipboardToolStripMenuItem,
-            this.copySelectedToClipboardToolStripMenuItem});
+            this.copySelectedToClipboardToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.copyToXlsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(238, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(238, 76);
             // 
             // copyAllToClipboardToolStripMenuItem
             // 
@@ -409,11 +320,24 @@
             this.copySelectedToClipboardToolStripMenuItem.Text = "Copy selected events to clipboard";
             this.copySelectedToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySelectedToClipboardToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(234, 6);
+            // 
+            // copyToXlsToolStripMenuItem
+            // 
+            this.copyToXlsToolStripMenuItem.Name = "copyToXlsToolStripMenuItem";
+            this.copyToXlsToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.copyToXlsToolStripMenuItem.Text = "Copy all for Excel";
+            this.copyToXlsToolStripMenuItem.Click += new System.EventHandler(this.copyToXlsToolStripMenuItem_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.mnAbout});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(979, 24);
@@ -429,6 +353,7 @@
             this.toolStripMenuItem3,
             this.extractAllEventsToolStripMenuItem,
             this.extractSelectedEventsToolStripMenuItem,
+            this.copyAllForExcelToolStripMenuItem,
             this.toolStripMenuItem5,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -437,11 +362,27 @@
             // 
             // startTraceToolStripMenuItem
             // 
+            this.startTraceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnRun,
+            this.mnRunWithFilters});
             this.startTraceToolStripMenuItem.Image = global::ExpressProfiler.Properties.Resources.imStart;
             this.startTraceToolStripMenuItem.Name = "startTraceToolStripMenuItem";
             this.startTraceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
             this.startTraceToolStripMenuItem.Text = "Start trace";
-            this.startTraceToolStripMenuItem.Click += new System.EventHandler(this.startTraceToolStripMenuItem_Click);
+            // 
+            // mnRun
+            // 
+            this.mnRun.Name = "mnRun";
+            this.mnRun.Size = new System.Drawing.Size(146, 22);
+            this.mnRun.Text = "Run";
+            this.mnRun.Click += new System.EventHandler(this.tbStart_Click);
+            // 
+            // mnRunWithFilters
+            // 
+            this.mnRunWithFilters.Name = "mnRunWithFilters";
+            this.mnRunWithFilters.Size = new System.Drawing.Size(146, 22);
+            this.mnRunWithFilters.Text = "Run with filters";
+            this.mnRunWithFilters.Click += new System.EventHandler(this.tbRunWithFilters_Click);
             // 
             // pauseTraceToolStripMenuItem
             // 
@@ -541,6 +482,21 @@
             this.clearTraceWindowToolStripMenuItem.Text = "Clear Trace Window";
             this.clearTraceWindowToolStripMenuItem.Click += new System.EventHandler(this.clearTraceWindowToolStripMenuItem_Click);
             // 
+            // mnAbout
+            // 
+            this.mnAbout.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnAbout.Name = "mnAbout";
+            this.mnAbout.Size = new System.Drawing.Size(48, 20);
+            this.mnAbout.Text = "About";
+            this.mnAbout.Click += new System.EventHandler(this.mnAbout_Click);
+            // 
+            // copyAllForExcelToolStripMenuItem
+            // 
+            this.copyAllForExcelToolStripMenuItem.Name = "copyAllForExcelToolStripMenuItem";
+            this.copyAllForExcelToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+            this.copyAllForExcelToolStripMenuItem.Text = "Copy all for Excel";
+            this.copyAllForExcelToolStripMenuItem.Click += new System.EventHandler(this.copyToXlsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -550,11 +506,14 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Express Profiler v1.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -571,7 +530,6 @@
 
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton tbStart;
         private System.Windows.Forms.ToolStripButton tbStop;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.RichTextBox reTextData;
@@ -586,21 +544,10 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripTextBox edPassword;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripSplitButton cbSelectEvents;
-        private System.Windows.Forms.ToolStripMenuItem mnExistingConnection;
-        private System.Windows.Forms.ToolStripMenuItem mnLoginLogout;
-        private System.Windows.Forms.ToolStripMenuItem mnRPCStarting;
-        private System.Windows.Forms.ToolStripMenuItem mnRPCCompleted;
-        private System.Windows.Forms.ToolStripMenuItem mnBatchStarting;
-        private System.Windows.Forms.ToolStripMenuItem mnBatchCompleted;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripComboBox tbAuth;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton tbClear;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel4;
-        private System.Windows.Forms.ToolStripTextBox edDuration;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copyAllToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copySelectedToClipboardToolStripMenuItem;
@@ -621,9 +568,16 @@
         private System.Windows.Forms.ToolStripMenuItem findNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
-        private System.Windows.Forms.ToolStripMenuItem mnSPStmtCompleted;
-        private System.Windows.Forms.ToolStripMenuItem mnSPStmtStarting;
+        private System.Windows.Forms.ToolStripSplitButton tbStart;
+        private System.Windows.Forms.ToolStripMenuItem tbRun;
+        private System.Windows.Forms.ToolStripMenuItem tbRunWithFilters;
+        private System.Windows.Forms.ToolStripMenuItem mnRun;
+        private System.Windows.Forms.ToolStripMenuItem mnRunWithFilters;
+        private System.Windows.Forms.ToolStripStatusLabel slEPS;
+        private System.Windows.Forms.ToolStripMenuItem copyToXlsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnAbout;
+        private System.Windows.Forms.ToolStripMenuItem copyAllForExcelToolStripMenuItem;
     }
 }
 
