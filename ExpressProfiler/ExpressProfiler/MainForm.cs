@@ -62,7 +62,7 @@ namespace ExpressProfiler
         private Exception m_profilerexception;
         private readonly Queue<PerfInfo> m_perf = new Queue<PerfInfo>();
         private PerfInfo m_first, m_prev;
-        private TraceProperties.TraceSettings m_currentsettings;
+        internal TraceProperties.TraceSettings m_currentsettings;
         private readonly List<PerfColumn> m_columns = new List<PerfColumn>();
 
         public MainForm()
@@ -80,7 +80,7 @@ namespace ExpressProfiler
             edUser.Text = m_username;
             edPassword.Text = m_userpassword;
             tbAuth.SelectedIndex = String.IsNullOrEmpty(m_username)?0:1;
-            if(m_autostart) StartProfiling();
+            if(m_autostart) RunProfiling(false);
             UpdateButtons();
         }
 
@@ -185,7 +185,15 @@ namespace ExpressProfiler
     
         private void tbStart_Click(object sender, EventArgs e)
         {
-            StartProfiling();
+
+            if (!TraceProperties.AtLeastOneEventSelected(m_currentsettings))
+            {
+                MessageBox.Show("You should select at least 1 event", "Starting trace", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                RunProfiling(true);
+            }
+            {
+                RunProfiling(false);
+            }
         }
 
         private void UpdateButtons()
@@ -994,16 +1002,24 @@ namespace ExpressProfiler
             Close();
         }
 
-        private void tbRunWithFilters_Click(object sender, EventArgs e)
+        internal void RunProfiling(bool showfilters)
         {
-            TraceProperties.TraceSettings ts = m_currentsettings.GetCopy();
-            using (TraceProperties frm = new TraceProperties())
+            if (showfilters)
             {
-                frm.SetSettings(ts);
-                if (DialogResult.OK != frm.ShowDialog()) return;
-                m_currentsettings = frm.m_currentsettings.GetCopy();
+                TraceProperties.TraceSettings ts = m_currentsettings.GetCopy();
+                using (TraceProperties frm = new TraceProperties())
+                {
+                    frm.SetSettings(ts);
+                    if (DialogResult.OK != frm.ShowDialog()) return;
+                    m_currentsettings = frm.m_currentsettings.GetCopy();
+                }
             }
             StartProfiling();
+        }
+
+        private void tbRunWithFilters_Click(object sender, EventArgs e)
+        {
+            RunProfiling(true);
         }
 
         private void copyToXlsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -58,6 +58,19 @@ namespace ExpressProfiler
             public TraceSettings()
             {
 
+                EventsColumns = new TraceEventsColumns
+                                    {
+                                        BatchCompleted = true,
+                                        RPCCompleted = true
+                                    };
+                Filters = new TraceFilters
+                              {
+                                  MaximumEventCount = 5000,
+                                  CpuFilterCondition = IntFilterCondition.GreaterThan,
+                                  ReadsFilterCondition = IntFilterCondition.GreaterThan,
+                                  WritesFilterCondition = IntFilterCondition.GreaterThan,
+                                  DurationFilterCondition = IntFilterCondition.GreaterThan
+                              };
             }
 
             public string GetAsXmlString()
@@ -72,22 +85,7 @@ namespace ExpressProfiler
 
             public static TraceSettings GetDefaultSettings()
             {
-                return new TraceSettings
-                           {
-                               EventsColumns = new TraceEventsColumns
-                                                   {
-                                                BatchCompleted = true,
-                                                RPCCompleted = true
-                                            },
-                               Filters = new TraceFilters
-                                             {
-                                                 MaximumEventCount = 5000,
-                                                 CpuFilterCondition = IntFilterCondition.GreaterThan,
-                                                 ReadsFilterCondition = IntFilterCondition.GreaterThan,
-                                                 WritesFilterCondition = IntFilterCondition.GreaterThan,
-                                                 DurationFilterCondition = IntFilterCondition.GreaterThan
-                                             }
-                           };
+                return new TraceSettings{};
             }
 
             public TraceSettings GetCopy()
@@ -256,7 +254,7 @@ namespace ExpressProfiler
 
             [Category(@"Maximum events count")]
             [DisplayName(@"Maximum events count")]
-            [DefaultValue(5000)]
+//            [DefaultValue(5000)]
             public int MaximumEventCount { get; set; }
 
         }
@@ -284,5 +282,29 @@ namespace ExpressProfiler
             Properties.Settings.Default.Save();
         }
 
+
+        internal static bool AtLeastOneEventSelected(TraceSettings ts)
+        {
+            return ts.EventsColumns.BatchCompleted 
+                    || ts.EventsColumns.BatchStarting 
+                    || ts.EventsColumns.LoginLogout 
+                    || ts.EventsColumns.ExistingConnection
+                    || ts.EventsColumns.RPCCompleted 
+                    || ts.EventsColumns.RPCStarting 
+                    || ts.EventsColumns.SPStmtCompleted 
+                    || ts.EventsColumns.SPStmtStarting
+                    || ts.EventsColumns.UserErrorMessage;
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            if (!AtLeastOneEventSelected(m_currentsettings))
+            {
+                MessageBox.Show("You should select at least 1 event","Starting trace",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                tabControl1.SelectedTab = tabPage2;
+                return;
+            }
+            DialogResult = DialogResult.OK;
+        }
     }
 }
