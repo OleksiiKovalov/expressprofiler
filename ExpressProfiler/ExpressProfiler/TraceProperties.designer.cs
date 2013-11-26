@@ -47,13 +47,13 @@
             // 
             // btnRun
             // 
-            this.btnRun.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnRun.Location = new System.Drawing.Point(221, 3);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 0;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // panel1
             // 

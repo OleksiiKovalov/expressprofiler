@@ -222,7 +222,7 @@ namespace ExpressProfiler
         private void NumberProc()
         {
             m_TokenId = TokenKind.tkNumber;
-            if (GetChar(m_Run) == '0' && (GetChar(m_Run) == 'X' || GetChar(m_Run) == 'x'))
+            if (GetChar(m_Run) == '0' && (GetChar(m_Run+1) == 'X' || GetChar(m_Run+1) == 'x'))
             {
                 m_Run += 2;
                 while (HexDigits.IndexOf(GetChar(m_Run)) != -1) m_Run++;
