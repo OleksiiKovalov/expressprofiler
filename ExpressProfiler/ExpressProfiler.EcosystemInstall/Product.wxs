@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+  <?define ProductCode="774C1515-6932-4F95-9DE9-F2066DAE99B9"?>
+  <?define UpgradeCode="E526188E-0633-4D73-A5BD-FFDC5B2FF828"?>
+  <?define Manufacturer="SQL Code Guard Team"?>
+  <?define ProductVersion="!(bind.FileVersion.ExpressProfilerexe)" ?>
+  <?define ProductName="ExpressProfiler $(var.ProductVersion)" ?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <Icon Id="Application.ico" SourceFile="Application.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="Application.ico" />
+    
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
+    
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize"/>
+      <Custom Action='AlreadyUpdated' After='FindRelatedProducts'>
+        <![CDATA[SELFFOUND]]>
+      </Custom>
+      <Custom Action='NewerFound' After='FindRelatedProducts'>
+        <![CDATA[NEWERFOUND]]>
+      </Custom>
+    </InstallExecuteSequence>
+    <CustomAction Id='AlreadyUpdated' Error='$(var.ProductName) already installed' />
+    <CustomAction Id='NewerFound' Error='Newer version already installed' />
+    <Upgrade Id="$(var.UpgradeCode)">
+      <UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND' Minimum="$(var.ProductVersion)" IncludeMinimum='no' />
+      <UpgradeVersion OnlyDetect='yes' Property='SELFFOUND' Minimum='$(var.ProductVersion)' IncludeMinimum='yes' Maximum='$(var.ProductVersion)' IncludeMaximum='yes' />
+      <UpgradeVersion OnlyDetect='no' Property='OLDERVERSIONBEINGUPGRADED' Minimum="0.0.0.0" IncludeMinimum='yes' Maximum='$(var.ProductVersion)' IncludeMaximum='no' />
+    </Upgrade>
+
+    
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="DesktopFolder" SourceName="Desktop" />
+      <Directory Id="ProgramFilesFolder">
+          <Directory Id="INSTALLFOLDER" Name="ExpressProfiler">
+            <Component Id="ExpressProfiler" Guid="4AC66737-E061-4CB5-A5CB-AF65995F2790">
+              <File Id="ExpressProfilerexe" Source="$(var.ExpressProfiler.TargetPath)" KeyPath="yes" Checksum="yes">
+                <Shortcut Advertise="yes"
+                                       Id="ExpressProfilerShortcut"
+                                       Directory="DesktopFolder"
+                                       Name="Express Profiler"
+                                       WorkingDirectory="INSTALLLOCATION"
+                                       Description="Express Profiler"
+                                       Icon="ExpressProfiler.exe">
+                  <Icon Id="ExpressProfiler.exe" SourceFile="Application.ico" />
+                </Shortcut>              </File>
+            <File Id="ExpressProfilerecosystemdll" Source="$(var.ExpressProfiler.Ecosystem.TargetPath)" KeyPath="no" Checksum="yes"/>
+            <RegistryKey Root="HKLM" Key="SOFTWARE\Red Gate\SIPFramework\Plugins" Action="create">
+              <RegistryValue Type="string" Name="ExpressProfiler" Value="[INSTALLFOLDER]ExpressProfiler.Ecosystem.dll" KeyPath="no"/>
+            </RegistryKey>
+            </Component>
+          </Directory>
+			</Directory>
+		</Directory>
+
+    <Feature Id="ProductFeature" Title="ExpressProfiler.EcosystemInstall" Level="1">
+			<ComponentRef Id="ExpressProfiler" />
+		</Feature>
+
+    <WixVariable Id="WixUILicenseRtf"  Value="License.rtf" />
+    
+    <UIRef Id="WixUI_Common" />
+    <UIRef Id="WixUI_Wizard"/>
+
+    <UI Id="WixUI_Wizard">
+
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <Property Id="WixUI_Mode" Value="Mondo" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg" Order="6">1</Publish>
+
+      <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">WixUI_InstallMode = "Change" OR WixUI_InstallMode = "Remove" OR WixUI_InstallMode = "Repair"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">NOT (WixUI_InstallMode = "Change" OR WixUI_InstallMode = "Remove" OR WixUI_InstallMode = "Repair")</Publish>
+      
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Property="CustomSetupType" Value="Custom" Order="1">1</Publish>
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">1</Publish>
+
+      <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="VerifyReadyDlg" Order="10">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg" Order="10">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg" Order="10">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+      
+    </UI>
+  
+	</Product>
+</Wix>
