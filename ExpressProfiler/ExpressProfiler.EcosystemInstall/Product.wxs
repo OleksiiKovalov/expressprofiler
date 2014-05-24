@@ -40,7 +40,7 @@
           <Directory Id="INSTALLFOLDER" Name="ExpressProfiler">
             <Component Id="ExpressProfiler" Guid="4AC66737-E061-4CB5-A5CB-AF65995F2790">
               <File Id="ExpressProfilerexe" Source="$(var.ExpressProfiler.TargetPath)" KeyPath="yes" Checksum="yes">
-                <Shortcut Advertise="yes"
+                  <Shortcut Advertise="yes"
                                        Id="ExpressProfilerShortcut"
                                        Directory="DesktopFolder"
                                        Name="Express Profiler"
@@ -49,7 +49,8 @@
                                        Icon="ExpressProfiler.exe">
                   <Icon Id="ExpressProfiler.exe" SourceFile="Application.ico" />
                 </Shortcut>              </File>
-            <File Id="ExpressProfilerecosystemdll" Source="$(var.ExpressProfiler.Ecosystem.TargetPath)" KeyPath="no" Checksum="yes"/>
+              <File Id="ExpressProfilerconfig" Source="$(var.ExpressProfiler.TargetPath).config" KeyPath="no" Checksum="yes"/>
+              <File Id="ExpressProfilerecosystemdll" Source="$(var.ExpressProfiler.Ecosystem.TargetPath)" KeyPath="no" Checksum="yes"/>
             <RegistryKey Root="HKLM" Key="SOFTWARE\Red Gate\SIPFramework\Plugins" Action="create">
               <RegistryValue Type="string" Name="ExpressProfiler" Value="[INSTALLFOLDER]ExpressProfiler.Ecosystem.dll" KeyPath="no"/>
             </RegistryKey>
