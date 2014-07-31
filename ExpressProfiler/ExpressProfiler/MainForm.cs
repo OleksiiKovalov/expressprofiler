@@ -10,6 +10,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -694,7 +695,15 @@ namespace ExpressProfiler
         {
             if(m_ProfilingState==ProfilingStateEnum.psPaused||m_ProfilingState==ProfilingStateEnum.psProfiling)
             {
-                StopProfiling();
+                if (MessageBox.Show("There are traces still running. Are you sure you want to close the application?","ExpressProfiler",MessageBoxButtons.YesNo,MessageBoxIcon.Question
+                    ,MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                {
+                    StopProfiling();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
             }
         }
 
