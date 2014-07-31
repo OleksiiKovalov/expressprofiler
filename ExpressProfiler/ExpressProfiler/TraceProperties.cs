@@ -110,7 +110,8 @@ namespace ExpressProfiler
                                                 Database = EventsColumns.Database,
                                                 EndTime = EventsColumns.EndTime,
                                                 ObjectName = EventsColumns.ObjectName,
-                                                StartTime = EventsColumns.StartTime
+                                                StartTime = EventsColumns.StartTime,
+                                                BlockedProcessPeport =  EventsColumns.BlockedProcessPeport
                                             }
                                ,Filters =  new TraceFilters
                                                {
@@ -128,8 +129,11 @@ namespace ExpressProfiler
                                                   TextDataFilterCondition = Filters.TextDataFilterCondition,
                                                   Writes = Filters.Writes,
                                                   WritesFilterCondition = Filters.WritesFilterCondition,
-                                                  MaximumEventCount = Filters.MaximumEventCount
-
+                                                  MaximumEventCount = Filters.MaximumEventCount,
+                                                  SPID = Filters.SPID,
+                                                  SPIDFilterCondition =  Filters.SPIDFilterCondition,
+                                                  ApplicationName = Filters.ApplicationName,
+                                                  ApplicationNameFilterCondition = Filters.ApplicationNameFilterCondition
                                               }
                            }
                     ;
@@ -177,6 +181,12 @@ namespace ExpressProfiler
             [DisplayName(@"User Error Message")]
             [DefaultValue(false)]
             public bool UserErrorMessage { get; set; }
+            [Category(@"Events")]
+            [DisplayName(@"Blocked process report")]
+            [DefaultValue(false)]
+            public bool BlockedProcessPeport { get; set; }
+
+
 
             [Category(@"Columns")]
             [DisplayName(@"Start time")]
@@ -250,6 +260,7 @@ namespace ExpressProfiler
             [Category(@"Writes")]
             [DisplayName(@"Condition")]
             public IntFilterCondition WritesFilterCondition { get; set; }
+
             [Category(@"Writes")]
             [DisplayName(@"Value")]
             public int? Writes { get; set; }
@@ -258,6 +269,20 @@ namespace ExpressProfiler
             [DisplayName(@"Maximum events count")]
 //            [DefaultValue(5000)]
             public int MaximumEventCount { get; set; }
+
+            [Category(@"SPID")]
+            [DisplayName(@"Condition")]
+            public IntFilterCondition SPIDFilterCondition { get; set; }
+            [Category(@"SPID")]
+            [DisplayName(@"Value")]
+            public int? SPID { get; set; }
+
+            [Category(@"ApplicationName")]
+            [DisplayName(@"Condition")]
+            public StringFilterCondition ApplicationNameFilterCondition { get; set; }
+            [Category(@"ApplicationName")]
+            [DisplayName(@"Value")]
+            public string ApplicationName { get; set; }
 
         }
 
@@ -295,7 +320,9 @@ namespace ExpressProfiler
                     || ts.EventsColumns.RPCStarting 
                     || ts.EventsColumns.SPStmtCompleted 
                     || ts.EventsColumns.SPStmtStarting
-                    || ts.EventsColumns.UserErrorMessage;
+                    || ts.EventsColumns.UserErrorMessage
+                    ||ts.EventsColumns.BlockedProcessPeport;
+
         }
 
         private void btnRun_Click(object sender, EventArgs e)
