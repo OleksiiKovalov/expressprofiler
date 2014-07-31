@@ -1052,6 +1052,8 @@ namespace ExpressProfiler
         {
 
             XmlDocument doc = new XmlDocument();
+            XmlProcessingInstruction pi = doc.CreateProcessingInstruction("mso-application", "progid='Excel.Sheet'");
+            doc.AppendChild(pi); 
             const string urn = "urn:schemas-microsoft-com:office:spreadsheet";
             XmlNode root = doc.CreateElement("ss","Workbook",urn);
             NewAttribute(root, "xmlns:ss", urn);
