@@ -61,7 +61,9 @@ namespace ExpressProfiler
                 EventsColumns = new TraceEventsColumns
                                     {
                                         BatchCompleted = true,
-                                        RPCCompleted = true
+                                        RPCCompleted = true,
+                                        StartTime =  true,
+                                        EndTime = true
                                     };
                 Filters = new TraceFilters
                               {
