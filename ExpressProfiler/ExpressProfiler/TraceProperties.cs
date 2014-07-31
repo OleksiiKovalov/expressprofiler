@@ -111,7 +111,9 @@ namespace ExpressProfiler
                                                 EndTime = EventsColumns.EndTime,
                                                 ObjectName = EventsColumns.ObjectName,
                                                 StartTime = EventsColumns.StartTime,
-                                                BlockedProcessPeport =  EventsColumns.BlockedProcessPeport
+                                                BlockedProcessPeport =  EventsColumns.BlockedProcessPeport,
+                                                SQLStmtStarting = EventsColumns.SQLStmtStarting,
+                                                SQLStmtCompleted = EventsColumns.SQLStmtCompleted
                                             }
                                ,Filters =  new TraceFilters
                                                {
@@ -162,11 +164,11 @@ namespace ExpressProfiler
             [DefaultValue(false)]
             public bool RPCCompleted { get; set; }
             [Category(@"Events")]
-            [DisplayName(@"Batch:Starting")]
+            [DisplayName(@"SQL:BatchStarting")]
             [DefaultValue(false)]
             public bool BatchStarting { get; set; }
             [Category(@"Events")]
-            [DisplayName(@"Batch:Completed")]
+            [DisplayName(@"SQL:BatchCompleted")]
             [DefaultValue(false)]
             public bool BatchCompleted { get; set; }
             [Category(@"Events")]
@@ -185,6 +187,15 @@ namespace ExpressProfiler
             [DisplayName(@"Blocked process report")]
             [DefaultValue(false)]
             public bool BlockedProcessPeport { get; set; }
+            [Category(@"Events")]
+            [DisplayName(@"SQL:StmtStarting")]
+            [DefaultValue(false)]
+            public bool SQLStmtStarting { get; set; }
+            [Category(@"Events")]
+            [DisplayName(@"SQL:StmtCompleted")]
+            [DefaultValue(false)]
+            public bool SQLStmtCompleted { get; set; }
+
 
 
 
@@ -321,7 +332,9 @@ namespace ExpressProfiler
                     || ts.EventsColumns.SPStmtCompleted 
                     || ts.EventsColumns.SPStmtStarting
                     || ts.EventsColumns.UserErrorMessage
-                    ||ts.EventsColumns.BlockedProcessPeport;
+                    || ts.EventsColumns.BlockedProcessPeport
+                    || ts.EventsColumns.SQLStmtStarting
+                    || ts.EventsColumns.SQLStmtCompleted;
 
         }
 

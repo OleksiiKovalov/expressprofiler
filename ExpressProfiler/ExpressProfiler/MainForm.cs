@@ -571,6 +571,31 @@ namespace ExpressProfiler
 
                 }
 
+                if (m_currentsettings.EventsColumns.SQLStmtStarting)
+                {
+                    m_Rdr.SetEvent(ProfilerEvents.TSQL.SQLStmtStarting,
+                                   ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
+                                   ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
+                                   ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
+                                   ProfilerEventColumns.SPID
+                                   , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                                   , ProfilerEventColumns.DatabaseName
+                                   , ProfilerEventColumns.ApplicationName
+                        );
+                }
+                if (m_currentsettings.EventsColumns.SQLStmtCompleted)
+                {
+                    m_Rdr.SetEvent(ProfilerEvents.TSQL.SQLStmtCompleted,
+                                   ProfilerEventColumns.TextData, ProfilerEventColumns.LoginName,
+                                   ProfilerEventColumns.CPU, ProfilerEventColumns.Reads,
+                                   ProfilerEventColumns.Writes, ProfilerEventColumns.Duration,
+                                   ProfilerEventColumns.SPID
+                                   , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
+                                   , ProfilerEventColumns.DatabaseName
+                                   , ProfilerEventColumns.ApplicationName
+                        );
+                }
+
                 if (null != m_currentsettings.Filters.Duration)
                 {
                     SetIntFilter(m_currentsettings.Filters.Duration*1000,
