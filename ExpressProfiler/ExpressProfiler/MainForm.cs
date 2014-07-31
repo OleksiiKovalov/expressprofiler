@@ -276,22 +276,6 @@ namespace ExpressProfiler
             try
             {
                 lvEvents.Columns.Clear();
-                /*
-                lvEvents.Columns.Add("Event Class", 122);
-                lvEvents.Columns.Add("Text Data", 255);
-                lvEvents.Columns.Add("Login Name", 79);
-                lvEvents.Columns.Add("CPU", 82).TextAlign = HorizontalAlignment.Right;
-                lvEvents.Columns.Add("Reads", 78).TextAlign = HorizontalAlignment.Right;
-                lvEvents.Columns.Add("Writes", 78).TextAlign = HorizontalAlignment.Right;
-                lvEvents.Columns.Add("Duration, ms", 82).TextAlign = HorizontalAlignment.Right;
-                lvEvents.Columns.Add("SPID", 50).TextAlign = HorizontalAlignment.Right;
-                if(m_currentsettings.EventsColumns.StartTime) lvEvents.Columns.Add("Start time", 140).TextAlign = HorizontalAlignment.Left;
-                if (m_currentsettings.EventsColumns.EndTime) lvEvents.Columns.Add("End time", 140).TextAlign = HorizontalAlignment.Left;
-                if (m_currentsettings.EventsColumns.Database) lvEvents.Columns.Add("Database", 70).TextAlign = HorizontalAlignment.Left;
-                if (m_currentsettings.EventsColumns.ObjectName) lvEvents.Columns.Add("ObjectName", 70).TextAlign = HorizontalAlignment.Left;
-                if (m_currentsettings.EventsColumns.ApplicationName) lvEvents.Columns.Add("ApplicationName", 70).TextAlign = HorizontalAlignment.Left;
-                lvEvents.Columns.Add("#", 53).TextAlign = HorizontalAlignment.Right;
-                 */
                 foreach (PerfColumn pc in m_columns)
                 {
                     var l = lvEvents.Columns.Add(pc.Caption, pc.Width);
@@ -573,25 +557,34 @@ namespace ExpressProfiler
                                    ProfilerEventColumns.ApplicationName
                         );
                 }
+                if (m_currentsettings.EventsColumns.BlockedProcessPeport)
+                {
+                    m_Rdr.SetEvent(ProfilerEvents.ErrorsAndWarnings.Blockedprocessreport,
+                                   ProfilerEventColumns.TextData,
+                                   ProfilerEventColumns.LoginName,
+                                   ProfilerEventColumns.CPU,
+                                   ProfilerEventColumns.SPID,
+                                   ProfilerEventColumns.StartTime,
+                                   ProfilerEventColumns.DatabaseName,
+                                   ProfilerEventColumns.ApplicationName
+                        );
+
+                }
 
                 if (null != m_currentsettings.Filters.Duration)
                 {
                     SetIntFilter(m_currentsettings.Filters.Duration*1000,
                                  m_currentsettings.Filters.DurationFilterCondition, ProfilerEventColumns.Duration);
                 }
-                SetIntFilter(m_currentsettings.Filters.Reads, m_currentsettings.Filters.ReadsFilterCondition,
-                             ProfilerEventColumns.Reads);
-                SetIntFilter(m_currentsettings.Filters.Writes, m_currentsettings.Filters.WritesFilterCondition,
-                             ProfilerEventColumns.Writes);
-                SetIntFilter(m_currentsettings.Filters.CPU, m_currentsettings.Filters.CpuFilterCondition,
-                             ProfilerEventColumns.CPU);
+                SetIntFilter(m_currentsettings.Filters.Reads, m_currentsettings.Filters.ReadsFilterCondition,ProfilerEventColumns.Reads);
+                SetIntFilter(m_currentsettings.Filters.Writes, m_currentsettings.Filters.WritesFilterCondition,ProfilerEventColumns.Writes);
+                SetIntFilter(m_currentsettings.Filters.CPU, m_currentsettings.Filters.CpuFilterCondition,ProfilerEventColumns.CPU);
+                SetIntFilter(m_currentsettings.Filters.SPID, m_currentsettings.Filters.SPIDFilterCondition, ProfilerEventColumns.SPID);
 
-                SetStringFilter(m_currentsettings.Filters.LoginName, m_currentsettings.Filters.LoginNameFilterCondition,
-                                ProfilerEventColumns.LoginName);
-                SetStringFilter(m_currentsettings.Filters.DatabaseName,
-                                m_currentsettings.Filters.DatabaseNameFilterCondition, ProfilerEventColumns.DatabaseName);
-                SetStringFilter(m_currentsettings.Filters.TextData, m_currentsettings.Filters.TextDataFilterCondition,
-                                ProfilerEventColumns.TextData);
+                SetStringFilter(m_currentsettings.Filters.LoginName, m_currentsettings.Filters.LoginNameFilterCondition,ProfilerEventColumns.LoginName);
+                SetStringFilter(m_currentsettings.Filters.DatabaseName,m_currentsettings.Filters.DatabaseNameFilterCondition, ProfilerEventColumns.DatabaseName);
+                SetStringFilter(m_currentsettings.Filters.TextData, m_currentsettings.Filters.TextDataFilterCondition,ProfilerEventColumns.TextData);
+                SetStringFilter(m_currentsettings.Filters.ApplicationName, m_currentsettings.Filters.ApplicationNameFilterCondition, ProfilerEventColumns.ApplicationName);
 
 
                 m_Cmd.Connection = m_Conn;
