@@ -145,7 +145,6 @@
             // edEvents
             // 
             this.edEvents.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edEvents.HelpVisible = false;
             this.edEvents.Location = new System.Drawing.Point(3, 3);
             this.edEvents.Name = "edEvents";
             this.edEvents.SelectedObject = this.btnRun;
