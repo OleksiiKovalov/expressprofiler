@@ -107,7 +107,7 @@ namespace ExpressProfiler
                                                 SPStmtStarting = EventsColumns.SPStmtStarting,
                                                 UserErrorMessage = EventsColumns.UserErrorMessage,
                                                 ApplicationName = EventsColumns.ApplicationName,
-                                                Database = EventsColumns.Database,
+                                                DatabaseName = EventsColumns.DatabaseName,
                                                 EndTime = EventsColumns.EndTime,
                                                 ObjectName = EventsColumns.ObjectName,
                                                 StartTime = EventsColumns.StartTime,
@@ -149,50 +149,62 @@ namespace ExpressProfiler
         {
             [Category(@"Events")]
             [DisplayName(@"ExistingConnection")]
+            [Description(@"The ExistingConnection event class indicates the properties of existing user connections when the trace was started. The server raises one ExistingConnection event per existing user connection.")]
             [DefaultValue(false)]
             public bool ExistingConnection { get; set; }
             [Category(@"Events")]
             [DisplayName(@"LoginLogout")]
+            [Description(@"The Audit Login event class indicates that a user has successfully logged in to SQL Server. Events in this class are fired by new connections or by connections that are reused from a connection pool. The Audit Logout event class indicates that a user has logged out of (logged off) Microsoft SQL Server. Events in this class are fired by new connections or by connections that are reused from a connection pool.")]
             [DefaultValue(false)]
             public bool LoginLogout { get; set; }
             [Category(@"Events")]
             [DisplayName(@"RPC:Starting")]
+            [Description(@"The RPC:Starting event class indicates that a remote procedure call has started.")]
             [DefaultValue(false)]
             public bool RPCStarting { get; set; }
             [Category(@"Events")]
             [DisplayName(@"RPC:Completed")]
+            [Description(@"The RPC:Completed event class indicates that a remote procedure call has been completed. ")]
             [DefaultValue(false)]
             public bool RPCCompleted { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SQL:BatchStarting")]
+            [Description(@"The SQL:BatchStarting event class indicates that a Transact-SQL batch is starting.")]
             [DefaultValue(false)]
             public bool BatchStarting { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SQL:BatchCompleted")]
+            [Description(@"The SQL:BatchCompleted event class indicates that the Transact-SQL batch has completed. ")]
             [DefaultValue(false)]
             public bool BatchCompleted { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SP:StmtCompleted")]
+            [Description(@"The SP:StmtCompleted event class indicates that a Transact-SQL statement within a stored procedure has completed. ")]
             [DefaultValue(false)]
             public bool SPStmtCompleted { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SP:StmtStarting")]
+            [Description(@"The SP:StmtStarting event class indicates that a Transact-SQL statement within a stored procedure has started. ")]
             [DefaultValue(false)]
             public bool SPStmtStarting { get; set; }
             [Category(@"Events")]
             [DisplayName(@"User Error Message")]
+            [Description(@"The User Error Message event class displays the error message as seen by the user in the case of an error or exception. The error message text appears in the TextData field.")]
             [DefaultValue(false)]
             public bool UserErrorMessage { get; set; }
             [Category(@"Events")]
             [DisplayName(@"Blocked process report")]
+            [Description(@"The Blocked Process Report event class indicates that a task has been blocked for more than a specified amount of time. This event class does not include system tasks or tasks that are waiting on non deadlock-detectable resources.")]
             [DefaultValue(false)]
             public bool BlockedProcessPeport { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SQL:StmtStarting")]
+            [Description(@"The SQL:StmtStarting event class indicates that a Transact-SQL statement has started.")]
             [DefaultValue(false)]
             public bool SQLStmtStarting { get; set; }
             [Category(@"Events")]
             [DisplayName(@"SQL:StmtCompleted")]
+            [Description(@"The SQL:StmtCompleted event class indicates that a Transact-SQL statement has completed. ")]
             [DefaultValue(false)]
             public bool SQLStmtCompleted { get; set; }
 
@@ -201,22 +213,27 @@ namespace ExpressProfiler
 
             [Category(@"Columns")]
             [DisplayName(@"Start time")]
+            [Description(@"The time at which the event started, when available.")]
             [DefaultValue(false)]
             public bool StartTime { get; set; }
             [Category(@"Columns")]
             [DisplayName(@"End time")]
+            [Description(@"The time at which the event ended. This column is not populated for event classes that refer to an event that is starting, such as SQL:BatchStarting or SP:Starting.")]
             [DefaultValue(false)]
             public bool EndTime { get; set; }
             [Category(@"Columns")]
-            [DisplayName(@"Database")]
+            [DisplayName(@"DatabaseName")]
+            [Description(@"The name of the database in which the user statement is running.")]
             [DefaultValue(false)]
-            public bool Database { get; set; }
+            public bool DatabaseName { get; set; }
             [Category(@"Columns")]
             [DisplayName(@"Application name")]
+            [Description(@"The name of the client application that created the connection to an instance of SQL Server. This column is populated with the values passed by the application and not the name of the program.")]
             [DefaultValue(false)]
             public bool ApplicationName { get; set; }
             [Category(@"Columns")]
             [DisplayName(@"Object name")]
+            [Description(@"The name of the object that is referenced.")]
             [DefaultValue(false)]
             public bool ObjectName { get; set; }
 
