@@ -162,13 +162,13 @@ namespace ExpressProfiler
                     case "-rpccompleted":
                         m_currentsettings.EventsColumns.RPCCompleted = true;
                         break;
-                    case "-RPCStarting":
+                    case "-rpcstarting":
                         m_currentsettings.EventsColumns.RPCStarting = true;
                         break;
-                    case "-SPStmtCompleted":
+                    case "-spstmtcompleted":
                         m_currentsettings.EventsColumns.SPStmtCompleted = true;
                         break;
-                    case "-SPStmtStarting":
+                    case "-spstmtstarting":
                         m_currentsettings.EventsColumns.SPStmtStarting = true;
                         break;
                        
