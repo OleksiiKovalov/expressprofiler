@@ -52,6 +52,8 @@
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.edPassword = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbStayOnTop = new System.Windows.Forms.ToolStripButton();
+            this.tbTransparent = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.reTextData = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -80,6 +82,11 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.clearTraceWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stayOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.keepSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,7 +129,9 @@
             this.edUser,
             this.toolStripLabel3,
             this.edPassword,
-            this.toolStripSeparator3});
+            this.toolStripSeparator3,
+            this.tbStayOnTop,
+            this.tbTransparent});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(979, 25);
@@ -267,6 +276,28 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
+            // tbStayOnTop
+            // 
+            this.tbStayOnTop.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbStayOnTop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbStayOnTop.Image = ((System.Drawing.Image)(resources.GetObject("tbStayOnTop.Image")));
+            this.tbStayOnTop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbStayOnTop.Name = "tbStayOnTop";
+            this.tbStayOnTop.Size = new System.Drawing.Size(23, 22);
+            this.tbStayOnTop.Text = "Stay on top";
+            this.tbStayOnTop.Click += new System.EventHandler(this.tbStayOnTop_Click);
+            // 
+            // tbTransparent
+            // 
+            this.tbTransparent.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tbTransparent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbTransparent.Image = ((System.Drawing.Image)(resources.GetObject("tbTransparent.Image")));
+            this.tbTransparent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbTransparent.Name = "tbTransparent";
+            this.tbTransparent.Size = new System.Drawing.Size(23, 22);
+            this.tbTransparent.Text = "Transparent";
+            this.tbTransparent.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -337,7 +368,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
-            this.mnAbout});
+            this.mnAbout,
+            this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(979, 24);
@@ -374,14 +406,14 @@
             // 
             this.mnRun.Name = "mnRun";
             this.mnRun.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
-            this.mnRun.Size = new System.Drawing.Size(152, 22);
+            this.mnRun.Size = new System.Drawing.Size(146, 22);
             this.mnRun.Text = "Run";
             this.mnRun.Click += new System.EventHandler(this.tbStart_Click);
             // 
             // mnRunWithFilters
             // 
             this.mnRunWithFilters.Name = "mnRunWithFilters";
-            this.mnRunWithFilters.Size = new System.Drawing.Size(152, 22);
+            this.mnRunWithFilters.Size = new System.Drawing.Size(146, 22);
             this.mnRunWithFilters.Text = "Run with filters";
             this.mnRunWithFilters.Click += new System.EventHandler(this.tbRunWithFilters_Click);
             // 
@@ -453,7 +485,9 @@
             this.findToolStripMenuItem,
             this.findNextToolStripMenuItem,
             this.toolStripMenuItem4,
-            this.clearTraceWindowToolStripMenuItem});
+            this.clearTraceWindowToolStripMenuItem,
+            this.deleteSelectedToolStripMenuItem,
+            this.keepSelectedToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.editToolStripMenuItem.Text = "&Edit";
@@ -504,6 +538,47 @@
             this.mnAbout.Size = new System.Drawing.Size(48, 20);
             this.mnAbout.Text = "About";
             this.mnAbout.Click += new System.EventHandler(this.mnAbout_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.stayOnTopToolStripMenuItem,
+            this.transparentToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // stayOnTopToolStripMenuItem
+            // 
+            this.stayOnTopToolStripMenuItem.Name = "stayOnTopToolStripMenuItem";
+            this.stayOnTopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.stayOnTopToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.stayOnTopToolStripMenuItem.Text = "Stay on top";
+            this.stayOnTopToolStripMenuItem.Click += new System.EventHandler(this.stayOnTopToolStripMenuItem_Click);
+            // 
+            // transparentToolStripMenuItem
+            // 
+            this.transparentToolStripMenuItem.Name = "transparentToolStripMenuItem";
+            this.transparentToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.transparentToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.transparentToolStripMenuItem.Text = "Transparent";
+            this.transparentToolStripMenuItem.Click += new System.EventHandler(this.transparentToolStripMenuItem_Click);
+            // 
+            // deleteSelectedToolStripMenuItem
+            // 
+            this.deleteSelectedToolStripMenuItem.Name = "deleteSelectedToolStripMenuItem";
+            this.deleteSelectedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
+            this.deleteSelectedToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.deleteSelectedToolStripMenuItem.Text = "Delete selected";
+            this.deleteSelectedToolStripMenuItem.Click += new System.EventHandler(this.deleteSelectedToolStripMenuItem_Click);
+            // 
+            // keepSelectedToolStripMenuItem
+            // 
+            this.keepSelectedToolStripMenuItem.Name = "keepSelectedToolStripMenuItem";
+            this.keepSelectedToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.Delete)));
+            this.keepSelectedToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.keepSelectedToolStripMenuItem.Text = "Keep selected";
+            this.keepSelectedToolStripMenuItem.Click += new System.EventHandler(this.keepSelectedToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -586,6 +661,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnAbout;
         private System.Windows.Forms.ToolStripMenuItem copyAllForExcelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton tbStayOnTop;
+        private System.Windows.Forms.ToolStripButton tbTransparent;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stayOnTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transparentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem keepSelectedToolStripMenuItem;
     }
 }
 
