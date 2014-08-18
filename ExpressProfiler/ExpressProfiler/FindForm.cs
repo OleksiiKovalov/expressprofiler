@@ -5,21 +5,41 @@ namespace ExpressProfiler
 {
     public partial class FindForm : Form
     {
-        internal MainForm mainForm;
-        public FindForm()
+        private MainForm m_mainForm;
+
+        public FindForm(MainForm f)
         {
             InitializeComponent();
+
+            m_mainForm = f;
+
+            // Set the control values to the last find performed.
+            edPattern.Text = m_mainForm.lastpattern;
+            chkCase.Checked = m_mainForm.matchCase;
+            chkWholeWord.Checked = m_mainForm.wholeWord;
         }
 
-        private void btnFind_Click(object sender, EventArgs e)
+        private void btnFindNext_Click(object sender, EventArgs e)
         {
-            mainForm.lastpattern = edPattern.Text;
-            mainForm.PerformFind();
+            DoFind(true);
+        }
+
+        private void btnFindPrevious_Click(object sender, EventArgs e)
+        {
+            DoFind(false);
+        }
+
+        private void DoFind(bool forwards)
+        {
+            m_mainForm.lastpattern = edPattern.Text;
+            m_mainForm.matchCase = chkCase.Checked;
+            m_mainForm.wholeWord = chkWholeWord.Checked;
+            m_mainForm.PerformFind(forwards);
         }
 
         private void edPattern_TextChanged(object sender, EventArgs e)
         {
-            mainForm.lastpos = -1;
+            m_mainForm.lastpos = -1;
         }
     }
 }

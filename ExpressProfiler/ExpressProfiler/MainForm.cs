@@ -8,9 +8,9 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -65,6 +65,8 @@ namespace ExpressProfiler
         private PerfInfo m_first, m_prev;
         internal TraceProperties.TraceSettings m_currentsettings;
         private readonly List<PerfColumn> m_columns = new List<PerfColumn>();
+        internal bool matchCase = false;
+        internal bool wholeWord = false;
 
         public MainForm()
         {
@@ -993,9 +995,8 @@ namespace ExpressProfiler
                                 MessageBoxIcon.Information);
                 return;
             }
-            using (FindForm f = new FindForm())
+            using (FindForm f = new FindForm(this))
             {
-                f.mainForm = this;
                 f.ShowDialog();
             }
         }
@@ -1013,23 +1014,48 @@ namespace ExpressProfiler
             }
         }
 
-        internal void PerformFind()
+        internal void PerformFind(bool forwards)
         {
             if(String.IsNullOrEmpty(lastpattern)) return;
-            for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) + 1; i < m_Cached.Count; i++)
+
+            if (forwards)
             {
-                ListViewItem lvi = m_Cached[i];
-                ProfilerEvent evt = (ProfilerEvent)lvi.Tag;
-                if (evt.TextData.IndexOf(lastpattern,StringComparison.CurrentCultureIgnoreCase)>=0)
+                for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) + 1; i < m_Cached.Count; i++)
                 {
-                    lvi.Focused = true;
-                    lastpos = i;
-                    SelectAllEvents(false);
-                    FocusLVI(lvi,true);
-                    return;
+                    if (FindText(i))
+                    {
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) - 1; i > 0; i--)
+                {
+                    if (FindText(i))
+                    {
+                        return;
+                    }
                 }
             }
             MessageBox.Show(String.Format("Failed to find \"{0}\". Searched to the end of data. ", lastpattern), "ExpressProfiler", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private bool FindText(int i)
+        {
+            ListViewItem lvi = m_Cached[i];
+            ProfilerEvent evt = (ProfilerEvent) lvi.Tag;
+            string pattern = (wholeWord ? "\\b" + lastpattern + "\\b" : lastpattern);
+            if (Regex.IsMatch(evt.TextData, pattern, (matchCase ? RegexOptions.None : RegexOptions.IgnoreCase)))
+            {
+                lvi.Focused = true;
+                lastpos = i;
+                SelectAllEvents(false);
+                FocusLVI(lvi, true);
+                return true;
+            }
+
+            return false;
         }
 
         private void findNextToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1040,7 +1066,7 @@ namespace ExpressProfiler
                                 MessageBoxIcon.Information);
                 return;
             }
-            PerformFind();
+            PerformFind(true);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1186,6 +1212,61 @@ namespace ExpressProfiler
         {
             MessageBox.Show(versionString+"\nhttps://expressprofiler.codeplex.com/", "About", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
+        }
+
+        private void tbStayOnTop_Click(object sender, EventArgs e)
+        {
+            SetStayOnTop();
+        }
+
+        private void SetStayOnTop()
+        {
+            tbStayOnTop.Checked = !tbStayOnTop.Checked;
+            this.TopMost = tbStayOnTop.Checked;
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            SetTransparent();
+        }
+
+        private void SetTransparent()
+        {
+            tbTransparent.Checked = !tbTransparent.Checked;
+            this.Opacity = tbTransparent.Checked ? 0.50 : 1;
+        }
+
+        private void stayOnTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetStayOnTop();
+        }
+
+        private void transparentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetTransparent();
+        }
+
+        private void deleteSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = lvEvents.SelectedIndices.Count-1; i >= 0; i--)
+            {
+                m_Cached.RemoveAt(lvEvents.SelectedIndices[i]);
+            }
+            lvEvents.VirtualListSize = m_Cached.Count;
+            lvEvents.SelectedIndices.Clear();
+        }
+
+        private void keepSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = m_Cached.Count - 1; i >= 0; i--)
+            {
+                if (!lvEvents.SelectedIndices.Contains(i))
+                {
+                    m_Cached.RemoveAt(i);
+                }
+            }
+            lvEvents.VirtualListSize = m_Cached.Count;
+            lvEvents.SelectedIndices.Clear();
         }
     }
 }
