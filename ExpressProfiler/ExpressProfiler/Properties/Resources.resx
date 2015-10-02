@@ -117,27 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Application" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Application.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="imClear" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="imStart" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADhSURBVDhPYxj8oH3Orv81k7b9T6tb9r+gbeN/qDBxAKQZ
-        Br5///5/+9HrYIMgsgQAimYgfv/+G5jeuvcaYUOQNYN0PXv//f+Ne2/AGAT8UjtwG4DqbEzNle2z/1t5
-        JWM3gJDNIM3ZVZP/q1gFYRpAjM0wzd1zT6IaANIM0gQD2DSDAg6rZhAACT579v3/vWfvwZpBhr2Hmgiz
-        Wc3KC7tmEAAlkLVbz/1fDMSguAbZDNIP0gzCeDXDAChqQDaBFILwlKX7wJpxOhsbALnALbL8f1BKBZjm
-        4ODAi6HaBhQwMAAAQVVZ8PPX9HsAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="imPause" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACBSURBVDhPYxiGQMFr2n/r5M3/WUw7/kOFGEBskLhL6mq4
-        GE4AUtgz5/9/EafJcMUgNkhMK3A+cQZU9j3BMAAkRrQBSfXnMAwAiYHkoEK4AUiRR/ZOjDAAiRFtALZA
-        BIkRbQAIoxsAEkP2Fk4AUgTWrJqHUAxkg8SIisZRQCpgYAAAxaFj8h9E5GYAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABkSURBVDhPYxicYMrMvP9QJnng3LUd/1t64sk3ZMrqiv/n
+        vu8l3xCQAVPu9ZBvyNwpdWADYJhkQ8AugLrCf7YTGFdkuxFvCMwAsjSDAEWaQQBmAFmaQQAUaGRrBgGK
+        NA81wMAAAP9qXIrkhO09AAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="imScroll" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -152,12 +138,14 @@
         BAwMAA9vkk4b7YbeAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="imStart" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="imClear" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABkSURBVDhPYxicYMrMvP9QJnng3LUd/1t64sk3ZMrqiv/n
-        vu8l3xCQAVPu9ZBvyNwpdWADYJhkQ8AugLrCf7YTGFdkuxFvCMwAsjSDAEWaQQBmAFmaQQAUaGRrBgGK
-        NA81wMAAAP9qXIrkhO09AAAAAElFTkSuQmCC
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADhSURBVDhPYxj8oH3Orv81k7b9T6tb9r+gbeN/qDBxAKQZ
+        Br5///5/+9HrYIMgsgQAimYgfv/+G5jeuvcaYUOQNYN0PXv//f+Ne2/AGAT8UjtwG4DqbEzNle2z/1t5
+        JWM3gJDNIM3ZVZP/q1gFYRpAjM0wzd1zT6IaANIM0gQD2DSDAg6rZhAACT579v3/vWfvwZpBhr2Hmgiz
+        Wc3KC7tmEAAlkLVbz/1fDMSguAbZDNIP0gzCeDXDAChqQDaBFILwlKX7wJpxOhsbALnALbL8f1BKBZjm
+        4ODAi6HaBhQwMAAAQVVZ8PPX9HsAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="imStop" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -167,5 +155,21 @@
         y84mzoDL4RFYNRNtALoLYJrvJSeTbgBCc/b/a6QagGwzCIO8BlWCH4AMQNYMsvlaFDkGQJ0N00y0AaOA
         FMDAAADj6ZD8CGtfSAAAAABJRU5ErkJggg==
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Application" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Application.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="imPause" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACBSURBVDhPYxiGQMFr2n/r5M3/WUw7/kOFGEBskLhL6mq4
+        GE4AUtgz5/9/EafJcMUgNkhMK3A+cQZU9j3BMAAkRrQBSfXnMAwAiYHkoEK4AUiRR/ZOjDAAiRFtALZA
+        BIkRbQAIoxsAEkP2Fk4AUgTWrJqHUAxkg8SIisZRQCpgYAAAxaFj8h9E5GYAAAAASUVORK5CYII=
+</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="filter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\filter.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

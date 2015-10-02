@@ -34,7 +34,7 @@ namespace ExpressProfiler
             m_mainForm.lastpattern = edPattern.Text;
             m_mainForm.matchCase = chkCase.Checked;
             m_mainForm.wholeWord = chkWholeWord.Checked;
-            m_mainForm.PerformFind(forwards);
+            m_mainForm.PerformFind(forwards, chkWrapAround.Checked);
         }
 
         private void edPattern_TextChanged(object sender, EventArgs e)

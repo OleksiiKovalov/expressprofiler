@@ -365,5 +365,85 @@ namespace ExpressProfiler
             }
             DialogResult = DialogResult.OK;
         }
+
+	    public bool IsIncluded(ListViewItem lvi)
+	    {
+			bool included = true;
+
+			//Fragile here to hard coding the columns, but they are currently this way.
+			included &= IsIncluded(m_currentsettings.Filters.ApplicationNameFilterCondition, m_currentsettings.Filters.ApplicationName, lvi.SubItems[0].Text);
+			included &= IsIncluded(m_currentsettings.Filters.TextDataFilterCondition, m_currentsettings.Filters.TextData, lvi.SubItems[1].Text);
+			included &= IsIncluded(m_currentsettings.Filters.LoginNameFilterCondition, m_currentsettings.Filters.LoginName, lvi.SubItems[2].Text);
+			included &= IsIncluded(m_currentsettings.Filters.CpuFilterCondition, m_currentsettings.Filters.CPU, lvi.SubItems[3].Text);
+			included &= IsIncluded(m_currentsettings.Filters.ReadsFilterCondition, m_currentsettings.Filters.Reads, lvi.SubItems[4].Text);
+			included &= IsIncluded(m_currentsettings.Filters.WritesFilterCondition, m_currentsettings.Filters.Writes, lvi.SubItems[5].Text);
+			included &= IsIncluded(m_currentsettings.Filters.DurationFilterCondition, m_currentsettings.Filters.Duration, lvi.SubItems[6].Text);
+			included &= IsIncluded(m_currentsettings.Filters.SPIDFilterCondition, m_currentsettings.Filters.SPID, lvi.SubItems[7].Text);
+
+			return included;
+	    }
+
+		private bool IsIncluded(StringFilterCondition filterCondition, string filter, string entryToCheck)
+		{
+			bool included = true; //Until removed.  Negative logic is applied here.
+			if (String.IsNullOrEmpty(filter)==false)
+			{
+				if (filterCondition == StringFilterCondition.Like)
+				{
+					if (entryToCheck.Contains(filter) == false)
+					{
+						included = false;
+					}
+				}
+				else if (filterCondition == StringFilterCondition.NotLike)
+				{
+					if (entryToCheck.Contains(filter) == true)
+					{
+						included = false;
+					}
+				}
+			}
+			return included;
+		}
+
+
+		private bool IsIncluded(IntFilterCondition filterCondition, int? filter, string entryToCheck)
+	    {
+			bool included = true; //Until removed.  Negative logic is applied here.
+
+			int intEntry;
+			if ((Int32.TryParse(entryToCheck, out intEntry))&&(filter.HasValue))
+			{
+				if (filterCondition == IntFilterCondition.Equal)
+				{
+					if (filter != intEntry)
+					{
+						included = false;
+					}
+				}
+				else if (filterCondition == IntFilterCondition.GreaterThan)
+				{
+					if (filter >= intEntry) // <= because we are using negative logic here.
+					{
+						included = false;
+					}
+				}
+				else if (filterCondition == IntFilterCondition.LessThan)
+				{
+					if (filter <= intEntry) // >= because we are using negative logic here.
+					{
+						included = false;
+					}
+				}
+				else if (filterCondition == IntFilterCondition.NotEqual)
+				{
+					if (filter == intEntry)
+					{
+						included = false;
+					}
+				}
+			}
+			return included;
+	    }
     }
 }

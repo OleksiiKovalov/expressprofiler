@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -13,13 +14,14 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using ExpressProfiler.EventComparers;
 
 
 namespace ExpressProfiler
 {
     public partial class MainForm : Form
     {
-        internal const string versionString = "Express Profiler v2.0";
+        internal const string versionString = "Express Profiler v2.1";
 
         private class PerfInfo
         {
@@ -50,6 +52,7 @@ namespace ExpressProfiler
         private readonly ProfilerEvent m_EventStopped = new ProfilerEvent();
         private readonly ProfilerEvent m_EventPaused = new ProfilerEvent();
         internal readonly List<ListViewItem> m_Cached = new List<ListViewItem>(1024);
+		internal readonly List<ListViewItem> m_CachedUnFiltered = new List<ListViewItem>(1024);
         private readonly Dictionary<string,ListViewItem> m_itembysql = new Dictionary<string, ListViewItem>();
         private string m_servername = "";
         private string m_username = "";
@@ -302,8 +305,13 @@ namespace ExpressProfiler
 
         void lvEvents_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+			lvEvents.ToggleSortOrder();
+			lvEvents.SetSortIcon(e.Column, lvEvents.SortOrder);
+			TextDataComparer comparer = new TextDataComparer(e.Column, lvEvents.SortOrder);
+			m_Cached.Sort(comparer);
+			UpdateSourceBox();
+			ShowSelectedEvent();
         }
-
 
         private string GetEventCaption(ProfilerEvent evt)
         {
@@ -625,9 +633,7 @@ namespace ExpressProfiler
                 StartProfilerThread();
                 m_servername = edServer.Text;
                 m_username = edUser.Text;
-                Properties.Settings.Default.ServerName = m_servername;
-                Properties.Settings.Default.UserName = tbAuth.SelectedIndex == 0 ? "" : m_username;
-                Properties.Settings.Default.Save();
+                SaveDefaultSettings();
             }
             catch (Exception e)
             {
@@ -640,8 +646,15 @@ namespace ExpressProfiler
             }
         }
 
+	    private void SaveDefaultSettings()
+	    {
+		    Properties.Settings.Default.ServerName = m_servername;
+		    Properties.Settings.Default.UserName = tbAuth.SelectedIndex == 0 ? "" : m_username;
+		    Properties.Settings.Default.Save();
+	    }
 
-        private void SetIntFilter(int? value, TraceProperties.IntFilterCondition condition, int column)
+
+	    private void SetIntFilter(int? value, TraceProperties.IntFilterCondition condition, int column)
         {
             int[] com = new[] { ComparisonOperators.Equal, ComparisonOperators.NotEqual, ComparisonOperators.GreaterThan, ComparisonOperators.LessThan};
             if ((null != value))
@@ -719,6 +732,7 @@ namespace ExpressProfiler
         {
             if (dontUpdateSource) return;
             StringBuilder sb = new StringBuilder();
+
             foreach (int i in lvEvents.SelectedIndices)
             {
                 ListViewItem lv = m_Cached[i];
@@ -748,7 +762,7 @@ namespace ExpressProfiler
 
         private void lvEvents_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            e.Item = m_Cached[e.ItemIndex];
+			e.Item = m_Cached[e.ItemIndex];
         }
 
         private void tbPause_Click(object sender, EventArgs e)
@@ -1014,32 +1028,97 @@ namespace ExpressProfiler
             }
         }
 
-        internal void PerformFind(bool forwards)
-        {
-            if(String.IsNullOrEmpty(lastpattern)) return;
+		//internal void PerformFind(bool forwards)
+		//{
+		//    if(String.IsNullOrEmpty(lastpattern)) return;
 
-            if (forwards)
-            {
-                for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) + 1; i < m_Cached.Count; i++)
-                {
-                    if (FindText(i))
-                    {
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) - 1; i > 0; i--)
-                {
-                    if (FindText(i))
-                    {
-                        return;
-                    }
-                }
-            }
-            MessageBox.Show(String.Format("Failed to find \"{0}\". Searched to the end of data. ", lastpattern), "ExpressProfiler", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+		//    if (forwards)
+		//    {
+		//        for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) + 1; i < m_Cached.Count; i++)
+		//        {
+		//            if (FindText(i))
+		//            {
+		//                return;
+		//            }
+		//        }
+		//    }
+		//    else
+		//    {
+		//        for (int i = lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem) - 1; i > 0; i--)
+		//        {
+		//            if (FindText(i))
+		//            {
+		//                return;
+		//            }
+		//        }
+		//    }
+		//    MessageBox.Show(String.Format("Failed to find \"{0}\". Searched to the end of data. ", lastpattern), "ExpressProfiler", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		//}
+
+
+		internal void PerformFind(bool forwards, bool wrapAround)
+		{
+			if (String.IsNullOrEmpty(lastpattern)) return;
+			int lastpos = lvEvents.Items.IndexOf(lvEvents.FocusedItem);
+			if (forwards)
+			{
+				for (int i = lastpos + 1; i < m_Cached.Count; i++)
+				{
+					if (FindText(i))
+					{
+						return;
+					}
+				}
+				if (wrapAround)
+				{
+					for (int i = 0; i < lastpos; i++)
+					{
+						if (FindText(i))
+						{
+							return;
+						}
+					}
+				}
+			}
+			else
+			{
+				for (int i = lastpos - 1; i > 0; i--)
+				{
+					if (FindText(i))
+					{
+						return;
+					}
+				}
+				if (wrapAround)
+				{
+					for (int i = m_Cached.Count; i > lastpos; i--)
+					{
+						if (FindText(i))
+						{
+							return;
+						}
+					}
+				}
+			}
+			MessageBox.Show(String.Format("Failed to find \"{0}\". Searched to the end of data. ", lastpattern), "ExpressProfiler", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
+
+
+		private void ShowSelectedEvent()
+		{
+			int focusedIndex = lvEvents.Items.IndexOf(lvEvents.FocusedItem);
+			if ((focusedIndex > -1) && (focusedIndex < m_Cached.Count))
+			{
+				ListViewItem lvi = m_Cached[focusedIndex];
+				ProfilerEvent evt = (ProfilerEvent) lvi.Tag;
+
+				lvi.Focused = true;
+				lastpos = focusedIndex;
+				SelectAllEvents(false);
+				FocusLVI(lvi, true);
+			}
+		}
+
 
         private bool FindText(int i)
         {
@@ -1066,7 +1145,7 @@ namespace ExpressProfiler
                                 MessageBoxIcon.Information);
                 return;
             }
-            PerformFind(true);
+            PerformFind(true, false);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1150,6 +1229,7 @@ namespace ExpressProfiler
 
             lock (m_Cached)
             {
+				long rowNumber = 1;
                 foreach (ListViewItem lvi in m_Cached)
                 {
                     row = doc.CreateElement("ss", "Row", urn);
@@ -1159,39 +1239,51 @@ namespace ExpressProfiler
                         PerfColumn pc = m_columns[i];
                         if(pc.Column!=-1)
                         {
-                        XmlNode cell = doc.CreateElement("ss", "Cell", urn);
-                        row.AppendChild(cell);
-                        XmlNode data = doc.CreateElement("ss", "Data", urn);
-                        cell.AppendChild(data);
-                            string dataType;
-                            switch (ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column])
-                            {
-                                    case ProfilerColumnDataType.Int:
-                                    case ProfilerColumnDataType.Long:
-                                        dataType = "Number";
-                                    break;
-                                    case ProfilerColumnDataType.DateTime:
-                                        dataType = "String";
-                                    break;
-                                default:
-                                        dataType = "String";
-                                    break;
-                            }
-                        if (ProfilerEventColumns.EventClass == pc.Column) dataType = "String";
-                        NewAttribute(data, "Type", dataType, urn);
-                        if (ProfilerEventColumns.EventClass == pc.Column)
-                        {
-                            data.InnerText = GetEventCaption(((ProfilerEvent) (lvi.Tag)));
-                        }
-                        else
-                        {
-                            data.InnerText = pc.Column == -1
-                                                 ? ""
-                                                 : GetFormattedValue((ProfilerEvent)(lvi.Tag),pc.Column,ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column]==ProfilerColumnDataType.DateTime?pc.Format:"") ??
-                                                   "";
-                        }
-                            }
+							XmlNode cell = doc.CreateElement("ss", "Cell", urn);
+							row.AppendChild(cell);
+							XmlNode data = doc.CreateElement("ss", "Data", urn);
+							cell.AppendChild(data);
+								string dataType;
+								switch (ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column])
+								{
+										case ProfilerColumnDataType.Int:
+										case ProfilerColumnDataType.Long:
+											dataType = "Number";
+										break;
+										case ProfilerColumnDataType.DateTime:
+											dataType = "String";
+										break;
+									default:
+											dataType = "String";
+										break;
+								}
+							if (ProfilerEventColumns.EventClass == pc.Column) dataType = "String";
+							NewAttribute(data, "Type", dataType, urn);
+							if (ProfilerEventColumns.EventClass == pc.Column)
+							{
+								data.InnerText = GetEventCaption(((ProfilerEvent) (lvi.Tag)));
+							}
+							else
+							{
+								data.InnerText = pc.Column == -1
+													 ? ""
+													 : GetFormattedValue((ProfilerEvent)(lvi.Tag),pc.Column,ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column]==ProfilerColumnDataType.DateTime?pc.Format:"") ??
+													   "";
+							}
+						}
+						else
+						{
+							//The export of the sequence number '#' is handled here.
+							XmlNode cell = doc.CreateElement("ss", "Cell", urn);
+							row.AppendChild(cell);
+							XmlNode data = doc.CreateElement("ss", "Data", urn);
+							cell.AppendChild(data);
+							const string dataType = "Number";
+							NewAttribute(data, "Type", dataType, urn);
+							data.InnerText = rowNumber.ToString();
+						}
                     }
+					rowNumber++;
                 }
             }
             using (StringWriter writer = new StringWriter())
@@ -1208,11 +1300,21 @@ namespace ExpressProfiler
 
         }
 
-        private void mnAbout_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(versionString+"\nhttps://expressprofiler.codeplex.com/", "About", MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-        }
+		private void mnAbout_Click(object sender, EventArgs e)
+		{
+			string aboutMsgOrig = String.Format("{0} nhttps://expressprofiler.codeplex.com/ \n Filter Icon: http://www.softicons.com/toolbar-icons/iconza-light-blue-icons-by-turbomilk/filter-icon", versionString);
+
+			StringBuilder aboutMsg = new StringBuilder();
+			aboutMsg.AppendLine(versionString + "\nhttps://expressprofiler.codeplex.com/");
+			aboutMsg.AppendLine();
+			aboutMsg.AppendLine("Filter Icon Downloaded From:");
+			aboutMsg.AppendLine("    http://www.softicons.com/toolbar-icons/iconza-light-blue-icons-by-turbomilk/filter-icon");
+			aboutMsg.AppendLine("    By Author Turbomilk:  	http://turbomilk.com/");
+			aboutMsg.AppendLine("    Used under Creative Commons License: http://creativecommons.org/licenses/by/3.0/");
+		
+			MessageBox.Show(aboutMsg.ToString(), "About", MessageBoxButtons.OK,
+							MessageBoxIcon.Information);
+		}
 
         private void tbStayOnTop_Click(object sender, EventArgs e)
         {
@@ -1268,5 +1370,247 @@ namespace ExpressProfiler
             lvEvents.VirtualListSize = m_Cached.Count;
             lvEvents.SelectedIndices.Clear();
         }
+
+
+		private void SaveToExcelXmlFile()
+		{
+
+			XmlDocument doc = new XmlDocument();
+			XmlProcessingInstruction pi = doc.CreateProcessingInstruction("mso-application", "progid='Excel.Sheet'");
+			doc.AppendChild(pi);
+			const string urn = "urn:schemas-microsoft-com:office:spreadsheet";
+			XmlNode root = doc.CreateElement("ss", "Workbook", urn);
+			NewAttribute(root, "xmlns:ss", urn);
+			doc.AppendChild(root);
+
+			XmlNode styles = doc.CreateElement("ss", "Styles", urn);
+			root.AppendChild(styles);
+			XmlNode style = doc.CreateElement("ss", "Style", urn);
+			styles.AppendChild(style);
+			NewAttribute(style, "ID", "s62", urn);
+			XmlNode font = doc.CreateElement("ss", "Font", urn);
+			style.AppendChild(font);
+			NewAttribute(font, "Bold", "1", urn);
+
+
+			XmlNode worksheet = doc.CreateElement("ss", "Worksheet", urn);
+			root.AppendChild(worksheet);
+			NewAttribute(worksheet, "Name", "Sql Trace", urn);
+			XmlNode table = doc.CreateElement("ss", "Table", urn);
+			worksheet.AppendChild(table);
+			NewAttribute(table, "ExpandedColumnCount", m_columns.Count.ToString(CultureInfo.InvariantCulture), urn);
+
+			foreach (ColumnHeader lv in lvEvents.Columns)
+			{
+				XmlNode r = doc.CreateElement("ss", "Column", urn);
+				NewAttribute(r, "AutoFitWidth", "0", urn);
+				NewAttribute(r, "Width", lv.Width.ToString(CultureInfo.InvariantCulture), urn);
+				table.AppendChild(r);
+			}
+
+			XmlNode row = doc.CreateElement("ss", "Row", urn);
+			table.AppendChild(row);
+			foreach (ColumnHeader lv in lvEvents.Columns)
+			{
+				XmlNode cell = doc.CreateElement("ss", "Cell", urn);
+				row.AppendChild(cell);
+				NewAttribute(cell, "StyleID", "s62", urn);
+				XmlNode data = doc.CreateElement("ss", "Data", urn);
+				cell.AppendChild(data);
+				NewAttribute(data, "Type", "String", urn);
+				data.InnerText = lv.Text;
+			}
+
+			lock (m_Cached)
+			{
+				long rowNumber = 1;
+				foreach (ListViewItem lvi in m_Cached)
+				{
+					row = doc.CreateElement("ss", "Row", urn);
+					table.AppendChild(row);
+					for (int i = 0; i < m_columns.Count; i++)
+					{
+						PerfColumn pc = m_columns[i];
+						if (pc.Column != -1)
+						{
+							XmlNode cell = doc.CreateElement("ss", "Cell", urn);
+							row.AppendChild(cell);
+							XmlNode data = doc.CreateElement("ss", "Data", urn);
+							cell.AppendChild(data);
+							string dataType;
+							switch (ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column])
+							{
+								case ProfilerColumnDataType.Int:
+								case ProfilerColumnDataType.Long:
+									dataType = "Number";
+									break;
+								case ProfilerColumnDataType.DateTime:
+									dataType = "String";
+									break;
+								default:
+									dataType = "String";
+									break;
+							}
+							if (ProfilerEventColumns.EventClass == pc.Column) dataType = "String";
+							NewAttribute(data, "Type", dataType, urn);
+							if (ProfilerEventColumns.EventClass == pc.Column)
+							{
+								data.InnerText = GetEventCaption(((ProfilerEvent)(lvi.Tag)));
+							}
+							else
+							{
+								data.InnerText = pc.Column == -1
+													 ? ""
+													 : GetFormattedValue((ProfilerEvent)(lvi.Tag), pc.Column, ProfilerEventColumns.ProfilerColumnDataTypes[pc.Column] == ProfilerColumnDataType.DateTime ? pc.Format : "") ??
+													   "";
+							}
+						}
+						else
+						{
+							//The export of the sequence number '#' is handled here.
+							XmlNode cell = doc.CreateElement("ss", "Cell", urn);
+							row.AppendChild(cell);
+							XmlNode data = doc.CreateElement("ss", "Data", urn);
+							cell.AppendChild(data);
+							const string dataType = "Number";
+							NewAttribute(data, "Type", dataType, urn);
+							data.InnerText = rowNumber.ToString();
+						}
+					}
+					rowNumber++;
+				}
+			}
+
+			SaveFileDialog sfd = new SaveFileDialog();
+			sfd.Filter = "Excel XML|*.xml";
+			sfd.Title = "Save the Excel XML FIle";
+			sfd.ShowDialog();
+
+			if (!string.IsNullOrEmpty(sfd.FileName))
+			{
+				using (StringWriter writer = new StringWriter())
+				{
+					XmlTextWriter textWriter = new XmlTextWriter(writer)
+					{
+						Formatting = Formatting.Indented,
+						Namespaces = true
+					};
+					doc.Save(textWriter);
+					string xml = writer.ToString();
+					MemoryStream xmlStream = new MemoryStream();
+					xmlStream.Write(System.Text.Encoding.UTF8.GetBytes(xml), 0, xml.Length);
+					xmlStream.Position = 0;
+					FileStream fs = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
+					xmlStream.WriteTo(fs);
+					fs.Close();
+					xmlStream.Close();
+				}
+				MessageBox.Show(string.Format("File saved to: {0}", sfd.FileName), "Information", MessageBoxButtons.OK,
+					MessageBoxIcon.Information);
+			}
+		}
+
+
+
+
+	    private void SetFilterEvents()
+	    {
+		    if (m_CachedUnFiltered.Count == 0)
+		    {
+			    lvEvents.SelectedIndices.Clear();
+			    TraceProperties.TraceSettings ts = m_currentsettings.GetCopy();
+			    using (TraceProperties frm = new TraceProperties())
+			    {
+				    frm.SetSettings(ts);
+				    if (DialogResult.OK != frm.ShowDialog()) return;
+				    ts = frm.m_currentsettings.GetCopy();
+
+				    m_CachedUnFiltered.AddRange(m_Cached);
+				    m_Cached.Clear();
+				    foreach (ListViewItem lvi in m_CachedUnFiltered)
+				    {
+					    if (frm.IsIncluded(lvi) && m_Cached.Count < ts.Filters.MaximumEventCount)
+					    {
+						    m_Cached.Add(lvi);
+					    }
+				    }
+			    }
+
+			    lvEvents.VirtualListSize = m_Cached.Count;
+			    UpdateSourceBox();
+			    ShowSelectedEvent();
+		    }
+	    }
+
+
+
+	    private void ClearFilterEvents()
+	    {
+		    if (m_CachedUnFiltered.Count > 0)
+		    {
+			    m_Cached.Clear();
+			    m_Cached.AddRange(m_CachedUnFiltered);
+			    m_CachedUnFiltered.Clear();
+			    lvEvents.VirtualListSize = m_Cached.Count;
+			    lvEvents.SelectedIndices.Clear();
+			    UpdateSourceBox();
+			    ShowSelectedEvent();
+		    }
+	    }
+
+
+
+		private void saveAllEventsToExcelXmlFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SaveToExcelXmlFile();
+		}
+
+		/// <summary>
+		/// Persist the server string when it changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void edServer_TextChanged(object sender, EventArgs e)
+		{
+			m_servername = edServer.Text;
+			SaveDefaultSettings();
+		}
+
+
+		/// <summary>
+		/// Persist the user name string when it changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void edUser_TextChanged(object sender, EventArgs e)
+		{
+			m_username = edUser.Text;
+			SaveDefaultSettings();
+		}
+
+
+		private void filterCapturedEventsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SetFilterEvents();
+		}
+
+		private void clearCapturedFiltersToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ClearFilterEvents();
+		}
+
+		private void tbFilterEvents_Click(object sender, EventArgs e)
+		{
+			ToolStripButton filterButton = (ToolStripButton)sender;
+			if (filterButton.Checked)
+			{
+				SetFilterEvents();
+			}
+			else
+			{
+				ClearFilterEvents();
+			}
+		}
+
     }
 }
