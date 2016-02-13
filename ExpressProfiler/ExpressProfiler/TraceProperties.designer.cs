@@ -62,7 +62,7 @@
             this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Controls.Add(this.btnRun);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 508);
+            this.panel1.Location = new System.Drawing.Point(0, 555);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(381, 29);
             this.panel1.TabIndex = 1;
@@ -105,7 +105,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(381, 508);
+            this.tabControl1.Size = new System.Drawing.Size(381, 555);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -114,7 +114,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(373, 482);
+            this.tabPage1.Size = new System.Drawing.Size(373, 529);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Filters";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
             this.edFilters.Name = "edFilters";
             this.edFilters.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.edFilters.SelectedObject = this.btnCancel;
-            this.edFilters.Size = new System.Drawing.Size(367, 476);
+            this.edFilters.Size = new System.Drawing.Size(367, 523);
             this.edFilters.TabIndex = 0;
             this.edFilters.ToolbarVisible = false;
             // 
@@ -158,7 +158,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(381, 537);
+            this.ClientSize = new System.Drawing.Size(381, 584);
             this.ControlBox = false;
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel1);
