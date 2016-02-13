@@ -107,6 +107,7 @@ namespace ExpressProfiler
                                                 SPStmtStarting = EventsColumns.SPStmtStarting,
                                                 UserErrorMessage = EventsColumns.UserErrorMessage,
                                                 ApplicationName = EventsColumns.ApplicationName,
+                                                HostName = EventsColumns.HostName,
                                                 DatabaseName = EventsColumns.DatabaseName,
                                                 EndTime = EventsColumns.EndTime,
                                                 ObjectName = EventsColumns.ObjectName,
@@ -124,6 +125,8 @@ namespace ExpressProfiler
                                                   Duration = Filters.Duration,
                                                   DurationFilterCondition = Filters.DurationFilterCondition,
                                                   LoginName = Filters.LoginName,
+                                                  HostName = Filters.HostName,
+                                                  HostNameFilterCondition = Filters.HostNameFilterCondition,
                                                   LoginNameFilterCondition = Filters.LoginNameFilterCondition,
                                                   Reads = Filters.Reads,
                                                   ReadsFilterCondition = Filters.ReadsFilterCondition,
@@ -135,7 +138,8 @@ namespace ExpressProfiler
                                                   SPID = Filters.SPID,
                                                   SPIDFilterCondition =  Filters.SPIDFilterCondition,
                                                   ApplicationName = Filters.ApplicationName,
-                                                  ApplicationNameFilterCondition = Filters.ApplicationNameFilterCondition
+                                                  ApplicationNameFilterCondition = Filters.ApplicationNameFilterCondition,
+
                                               }
                            }
                     ;
@@ -236,10 +240,17 @@ namespace ExpressProfiler
             [Description(@"The name of the object that is referenced.")]
             [DefaultValue(false)]
             public bool ObjectName { get; set; }
+            [Category(@"Columns")]
+            [DisplayName(@"Host name")]
+            [Description(@"Name of the client computer that originated the request.")]
+            [DefaultValue(false)]
+            public bool HostName { get; set; }
 
         }
+        
+        
 
-        [Serializable]
+                [Serializable]
         public class TraceFilters
         {
 
@@ -270,6 +281,14 @@ namespace ExpressProfiler
             [Category(@"LoginName")]
             [DisplayName(@"Value")]
             public string LoginName { get; set; }
+
+            [Category(@"HostName")]
+            [DisplayName(@"Condition")]
+            public StringFilterCondition HostNameFilterCondition { get; set; }
+            [Category(@"HostName")]
+            [DisplayName(@"Value")]
+            public string HostName { get; set; }
+
 
             [Category(@"Reads")]
             [DisplayName(@"Condition")]

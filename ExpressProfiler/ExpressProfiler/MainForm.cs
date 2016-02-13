@@ -270,6 +270,7 @@ namespace ExpressProfiler
             if (m_currentsettings.EventsColumns.DatabaseName) m_columns.Add(new PerfColumn { Caption = "DatabaseName", Column = ProfilerEventColumns.DatabaseName, Width = 70 });
             if (m_currentsettings.EventsColumns.ObjectName) m_columns.Add(new PerfColumn { Caption = "Object name", Column = ProfilerEventColumns.ObjectName, Width = 70 });
             if (m_currentsettings.EventsColumns.ApplicationName) m_columns.Add(new PerfColumn { Caption = "Application name", Column = ProfilerEventColumns.ApplicationName, Width = 70 });
+            if (m_currentsettings.EventsColumns.HostName) m_columns.Add(new PerfColumn { Caption = "Host name", Column = ProfilerEventColumns.HostName, Width = 70 });
 
             m_columns.Add(new PerfColumn { Caption = "#", Column = -1, Width = 53, Alignment = HorizontalAlignment.Right});
         }
@@ -446,7 +447,8 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.LoginName,
                                        ProfilerEventColumns.SPID,
                                        ProfilerEventColumns.StartTime,
-                                       ProfilerEventColumns.EndTime
+                                       ProfilerEventColumns.EndTime,
+                                       ProfilerEventColumns.HostName
                             );
                         m_Rdr.SetEvent(ProfilerEvents.SecurityAudit.AuditLogout,
                                        ProfilerEventColumns.CPU,
@@ -457,7 +459,8 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.SPID,
                                        ProfilerEventColumns.StartTime,
                                        ProfilerEventColumns.EndTime,
-                                       ProfilerEventColumns.ApplicationName
+                                       ProfilerEventColumns.ApplicationName,
+                                       ProfilerEventColumns.HostName
                             );
                     }
 
@@ -468,7 +471,8 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.SPID,
                                        ProfilerEventColumns.StartTime,
                                        ProfilerEventColumns.EndTime,
-                                       ProfilerEventColumns.ApplicationName
+                                       ProfilerEventColumns.ApplicationName,
+                                       ProfilerEventColumns.HostName
                             );
                     }
                     if (m_currentsettings.EventsColumns.BatchCompleted)
@@ -484,7 +488,8 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.StartTime,
                                        ProfilerEventColumns.EndTime,
                                        ProfilerEventColumns.DatabaseName,
-                                       ProfilerEventColumns.ApplicationName
+                                       ProfilerEventColumns.ApplicationName,
+                                       ProfilerEventColumns.HostName
                             );
                     }
                     if (m_currentsettings.EventsColumns.BatchStarting)
@@ -496,7 +501,8 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.StartTime,
                                        ProfilerEventColumns.EndTime,
                                        ProfilerEventColumns.DatabaseName,
-                                       ProfilerEventColumns.ApplicationName
+                                       ProfilerEventColumns.ApplicationName,
+                                       ProfilerEventColumns.HostName
                             );
                     }
                     if (m_currentsettings.EventsColumns.RPCStarting)
@@ -509,7 +515,9 @@ namespace ExpressProfiler
                                        ProfilerEventColumns.EndTime,
                                        ProfilerEventColumns.DatabaseName,
                                        ProfilerEventColumns.ObjectName,
-                                       ProfilerEventColumns.ApplicationName
+                                       ProfilerEventColumns.ApplicationName,
+                                       ProfilerEventColumns.HostName
+
                             );
                     }
 
@@ -525,6 +533,8 @@ namespace ExpressProfiler
                                    , ProfilerEventColumns.DatabaseName
                                    , ProfilerEventColumns.ObjectName
                                    , ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
+
                         );
                 }
                 if (m_currentsettings.EventsColumns.SPStmtCompleted)
@@ -539,6 +549,7 @@ namespace ExpressProfiler
                                    , ProfilerEventColumns.ObjectName
                                    , ProfilerEventColumns.ObjectID
                                    , ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
                 }
                 if (m_currentsettings.EventsColumns.SPStmtStarting)
@@ -553,6 +564,7 @@ namespace ExpressProfiler
                                    , ProfilerEventColumns.ObjectName
                                    , ProfilerEventColumns.ObjectID
                                    , ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
                 }
                 if (m_currentsettings.EventsColumns.UserErrorMessage)
@@ -565,6 +577,7 @@ namespace ExpressProfiler
                                    ProfilerEventColumns.StartTime,
                                    ProfilerEventColumns.DatabaseName,
                                    ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
                 }
                 if (m_currentsettings.EventsColumns.BlockedProcessPeport)
@@ -577,6 +590,7 @@ namespace ExpressProfiler
                                    ProfilerEventColumns.StartTime,
                                    ProfilerEventColumns.DatabaseName,
                                    ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
 
                 }
@@ -591,6 +605,7 @@ namespace ExpressProfiler
                                    , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
                                    , ProfilerEventColumns.DatabaseName
                                    , ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
                 }
                 if (m_currentsettings.EventsColumns.SQLStmtCompleted)
@@ -603,6 +618,7 @@ namespace ExpressProfiler
                                    , ProfilerEventColumns.StartTime, ProfilerEventColumns.EndTime
                                    , ProfilerEventColumns.DatabaseName
                                    , ProfilerEventColumns.ApplicationName
+                                   , ProfilerEventColumns.HostName
                         );
                 }
 
@@ -617,6 +633,7 @@ namespace ExpressProfiler
                 SetIntFilter(m_currentsettings.Filters.SPID, m_currentsettings.Filters.SPIDFilterCondition, ProfilerEventColumns.SPID);
 
                 SetStringFilter(m_currentsettings.Filters.LoginName, m_currentsettings.Filters.LoginNameFilterCondition,ProfilerEventColumns.LoginName);
+                SetStringFilter(m_currentsettings.Filters.HostName, m_currentsettings.Filters.HostNameFilterCondition, ProfilerEventColumns.HostName);
                 SetStringFilter(m_currentsettings.Filters.DatabaseName,m_currentsettings.Filters.DatabaseNameFilterCondition, ProfilerEventColumns.DatabaseName);
                 SetStringFilter(m_currentsettings.Filters.TextData, m_currentsettings.Filters.TextDataFilterCondition,ProfilerEventColumns.TextData);
                 SetStringFilter(m_currentsettings.Filters.ApplicationName, m_currentsettings.Filters.ApplicationNameFilterCondition, ProfilerEventColumns.ApplicationName);
@@ -961,6 +978,7 @@ namespace ExpressProfiler
             NewAttribute(row, "DatabaseName", evt.DatabaseName);
             NewAttribute(row, "ObjectName", evt.ObjectName);
             NewAttribute(row, "ApplicationName", evt.ApplicationName);
+            NewAttribute(row, "HostName", evt.HostName);
             row.InnerText = evt.TextData;
             root.AppendChild(row);
         }
