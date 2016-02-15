@@ -11,6 +11,8 @@ namespace ExpressProfiler
 
     public partial class TraceProperties : Form
     {
+
+
         public enum StringFilterCondition
         {
             Like,
@@ -25,6 +27,39 @@ namespace ExpressProfiler
             LessThan
         }
 
+
+        public static StringFilterCondition ParseStringCondition(string value)
+        {
+            switch(value.ToLower())
+            {
+                case "like":
+                case "eq":
+                case "=":       return StringFilterCondition.Like;
+                case "notlike": return StringFilterCondition.NotLike;
+            }
+            throw new Exception("Unknown filter condition:"+value);
+        }
+        public static IntFilterCondition ParseIntCondition(string value)
+        {
+            switch (value.ToLower())
+            {
+                case "equal":
+                case "eq":
+                case "=":
+                    return IntFilterCondition.Equal;
+                case "notequal":
+                case "ne":
+                case "!=":
+                case "<>": return IntFilterCondition.NotEqual;
+                case "greaterthan":
+                case "ge":
+                case ">": return IntFilterCondition.GreaterThan;
+                case "lessthan":
+                case "le":
+                case "<": return IntFilterCondition.LessThan;
+            }
+            throw new Exception("Unknown filter condition:" + value);
+        }
         /*
          declare @xml xml
         set @xml = '<root>

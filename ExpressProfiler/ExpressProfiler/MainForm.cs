@@ -109,83 +109,155 @@ namespace ExpressProfiler
         }
 
 
+
+//DatabaseName = Filters.DatabaseName,
+//LoginName = Filters.LoginName,
+//HostName = Filters.HostName,
+//TextData = Filters.TextData,
+//ApplicationName = Filters.ApplicationName,
+
+
+
+        private bool ParseFilterParam(string[] args, int idx)
+        {
+            string condition = idx + 1 < args.Length ? args[idx + 1] : "";
+            string value = idx + 2 < args.Length ? args[idx + 2] : "";
+
+            switch (args[idx].ToLower())
+            {
+                case "-cpu":
+                    m_currentsettings.Filters.CPU = Int32.Parse(value);
+                    m_currentsettings.Filters.CpuFilterCondition = TraceProperties.ParseIntCondition(condition);
+                    break;
+                case "-duration":
+                    m_currentsettings.Filters.Duration = Int32.Parse(value);
+                    m_currentsettings.Filters.DurationFilterCondition = TraceProperties.ParseIntCondition(condition);
+                    break;
+                case "-reads":
+                    m_currentsettings.Filters.Reads = Int32.Parse(value);
+                    m_currentsettings.Filters.ReadsFilterCondition = TraceProperties.ParseIntCondition(condition);
+                    break;
+                case "-writes":
+                    m_currentsettings.Filters.Writes = Int32.Parse(value);
+                    m_currentsettings.Filters.WritesFilterCondition = TraceProperties.ParseIntCondition(condition);
+                    break;
+                case "-spid":
+                    m_currentsettings.Filters.SPID = Int32.Parse(value);
+                    m_currentsettings.Filters.SPIDFilterCondition = TraceProperties.ParseIntCondition(condition);
+                    break;
+
+                case "-databasename":
+                    m_currentsettings.Filters.DatabaseName = value;
+                    m_currentsettings.Filters.DatabaseNameFilterCondition = TraceProperties.ParseStringCondition(condition);
+                    break;
+                case "-loginname":
+                    m_currentsettings.Filters.LoginName = value;
+                    m_currentsettings.Filters.LoginNameFilterCondition = TraceProperties.ParseStringCondition(condition);
+                    break;
+                case "-hostname":
+                    m_currentsettings.Filters.HostName = value;
+                    m_currentsettings.Filters.HostNameFilterCondition = TraceProperties.ParseStringCondition(condition);
+                    break;
+                case "-textdata":
+                    m_currentsettings.Filters.TextData = value;
+                    m_currentsettings.Filters.TextDataFilterCondition = TraceProperties.ParseStringCondition(condition);
+                    break;
+                case "-applicationname":
+                    m_currentsettings.Filters.ApplicationName = value;
+                    m_currentsettings.Filters.ApplicationNameFilterCondition = TraceProperties.ParseStringCondition(condition);
+                    break;
+
+            }
+            return false;
+        }
+
         private void ParseCommandLine()
         {
-            string[] args = Environment.GetCommandLineArgs();
-            int i = 1;
-            while (i < args.Length)
+            try
             {
-                string ep = i + 1 < args.Length ? args[i + 1] : "";
-                switch (args[i].ToLower())
+                string[] args = Environment.GetCommandLineArgs();
+                int i = 1;
+                while (i < args.Length)
                 {
-                    case "-s":
-                    case "-server":
-                        m_servername = ep;
-                        i++;
-                        break;
-                    case "-u":
-                    case "-user":
-                        m_username = ep;
-                        i++;
-                        break;
-                    case "-p":
-                    case "-password":
-                        m_userpassword = ep;
-                        i++;
-                        break;
-                    case "-m":
-                    case "-maxevents":
-                        int m;
-                        if (!Int32.TryParse(ep, out m)) m = 1000;
+                    string ep = i + 1 < args.Length ? args[i + 1] : "";
+                    switch (args[i].ToLower())
+                    {
+                        case "-s":
+                        case "-server":
+                            m_servername = ep;
+                            i++;
+                            break;
+                        case "-u":
+                        case "-user":
+                            m_username = ep;
+                            i++;
+                            break;
+                        case "-p":
+                        case "-password":
+                            m_userpassword = ep;
+                            i++;
+                            break;
+                        case "-m":
+                        case "-maxevents":
+                            int m;
+                            if (!Int32.TryParse(ep, out m)) m = 1000;
                             m_currentsettings.Filters.MaximumEventCount = m;
-                        break;
-                    case "-d":
-                    case "-duration":
-                        int d;
-                        if (Int32.TryParse(ep, out d))
-                        {
-                            m_currentsettings.Filters.DurationFilterCondition = TraceProperties.IntFilterCondition.GreaterThan;
-                            m_currentsettings.Filters.Duration = d;
-                        }
+                            break;
+                        case "-d":
+                        case "-duration":
+                            int d;
+                            if (Int32.TryParse(ep, out d))
+                            {
+                                m_currentsettings.Filters.DurationFilterCondition = TraceProperties.IntFilterCondition.GreaterThan;
+                                m_currentsettings.Filters.Duration = d;
+                            }
 
-                        break;
-                    case "-start":
-                        m_autostart = true;
-                        break;
-                    case "-batchcompleted":
-                        m_currentsettings.EventsColumns.BatchCompleted = true;
-                        break;
-                    case "-batchstarting":
-                        m_currentsettings.EventsColumns.BatchStarting = true;
-                        break;
-                    case "-existingconnection":
-                        m_currentsettings.EventsColumns.ExistingConnection = true;
-                        break;
-                    case "-loginlogout":
-                        m_currentsettings.EventsColumns.LoginLogout = true;
-                        break;
-                    case "-rpccompleted":
-                        m_currentsettings.EventsColumns.RPCCompleted = true;
-                        break;
-                    case "-rpcstarting":
-                        m_currentsettings.EventsColumns.RPCStarting = true;
-                        break;
-                    case "-spstmtcompleted":
-                        m_currentsettings.EventsColumns.SPStmtCompleted = true;
-                        break;
-                    case "-spstmtstarting":
-                        m_currentsettings.EventsColumns.SPStmtStarting = true;
-                        break;
-                       
+                            break;
+                        case "-start":
+                            m_autostart = true;
+                            break;
+                        case "-batchcompleted":
+                            m_currentsettings.EventsColumns.BatchCompleted = true;
+                            break;
+                        case "-batchstarting":
+                            m_currentsettings.EventsColumns.BatchStarting = true;
+                            break;
+                        case "-existingconnection":
+                            m_currentsettings.EventsColumns.ExistingConnection = true;
+                            break;
+                        case "-loginlogout":
+                            m_currentsettings.EventsColumns.LoginLogout = true;
+                            break;
+                        case "-rpccompleted":
+                            m_currentsettings.EventsColumns.RPCCompleted = true;
+                            break;
+                        case "-rpcstarting":
+                            m_currentsettings.EventsColumns.RPCStarting = true;
+                            break;
+                        case "-spstmtcompleted":
+                            m_currentsettings.EventsColumns.SPStmtCompleted = true;
+                            break;
+                        case "-spstmtstarting":
+                            m_currentsettings.EventsColumns.SPStmtStarting = true;
+                            break;
+                        default:
+                            if (ParseFilterParam(args, i)) i++;
+                            break;
+
+                    }
+                    i++;
                 }
-                i++;
-            }
 
-            if (m_servername.Length == 0)
+                if (m_servername.Length == 0)
+                {
+                    m_servername = @".\sqlexpress";
+                }
+            }
+            catch (Exception e)
             {
-                m_servername = @".\sqlexpress";
-            }
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+            }
 
         }
     
