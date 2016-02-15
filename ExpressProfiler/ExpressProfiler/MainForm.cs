@@ -1029,6 +1029,7 @@ namespace ExpressProfiler
             }
             using (FindForm f = new FindForm(this))
             {
+                f.TopMost = this.TopMost;
                 f.ShowDialog();
             }
         }
