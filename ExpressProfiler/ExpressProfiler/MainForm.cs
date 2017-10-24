@@ -827,7 +827,7 @@ namespace ExpressProfiler
                 ListViewItem lv = m_Cached[i];
                 if (lv.SubItems[1].Text != "")
                 {
-                    sb.AppendFormat("{0}\r\ngo\r\n", lv.SubItems[1].Text);
+                    sb.AppendFormat("{0}\r\ngo\r\n", lv.SubItems[1].Text.ParseSql());
                 }
             }
             m_Lex.FillRichEdit(reTextData, sb.ToString());
