@@ -51,7 +51,8 @@ namespace ExpressProfiler
         private readonly ProfilerEvent m_EventStarted = new ProfilerEvent();
         private readonly ProfilerEvent m_EventStopped = new ProfilerEvent();
         private readonly ProfilerEvent m_EventPaused = new ProfilerEvent();
-        internal readonly List<ListViewItem> m_Cached = new List<ListViewItem>(1024);
+		private readonly ProfilerEvent m_EventNote = new ProfilerEvent();
+		internal readonly List<ListViewItem> m_Cached = new List<ListViewItem>(1024);
 		internal readonly List<ListViewItem> m_CachedUnFiltered = new List<ListViewItem>(1024);
         private readonly Dictionary<string,ListViewItem> m_itembysql = new Dictionary<string, ListViewItem>();
         private string m_servername = "";
@@ -250,7 +251,7 @@ namespace ExpressProfiler
 
                 if (m_servername.Length == 0)
                 {
-                    m_servername = @".\sqlexpress";
+                    m_servername = @"(localDB)\MSSQLLocalDB";
                 }
             }
             catch (Exception e)
@@ -400,6 +401,10 @@ namespace ExpressProfiler
             {
                 return "Trace stopped";
             }
+			if (evt == m_EventNote)
+			{
+				return ">> ";
+			}
             return ProfilerEvents.Names[evt.EventClass];
         }
 
@@ -408,13 +413,15 @@ namespace ExpressProfiler
             return ProfilerEventColumns.Duration == column ? (evt.Duration / 1000).ToString(format) : evt.GetFormattedData(column,format);
         }
 
-        private void NewEventArrived(ProfilerEvent evt,bool last)
+        private void NewEventArrived(ProfilerEvent evt,bool last, string customtext = null)
         {
             {
                 ListViewItem current = (lvEvents.SelectedIndices.Count > 0) ? m_Cached[lvEvents.SelectedIndices[0]] : null;
                 m_EventCount++;
-                string caption = GetEventCaption(evt);
-                ListViewItem lvi = new ListViewItem(caption);
+				string caption = GetEventCaption(evt);
+				if (!string.IsNullOrEmpty(customtext))
+					caption += customtext;
+				ListViewItem lvi = new ListViewItem(caption);
                 string []items = new string[m_columns.Count];
                 for (int i = 1; i < m_columns.Count;i++ )
                 {
@@ -1688,6 +1695,17 @@ namespace ExpressProfiler
 		private void clearCapturedFiltersToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			ClearFilterEvents();
+		}
+
+		private void tbScroll_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void addSeparator_Click(object sender, EventArgs e)
+		{
+			NewEventArrived(m_EventNote, true, customText.Text);
+			UpdateButtons();
 		}
 
 		private void tbFilterEvents_Click(object sender, EventArgs e)
