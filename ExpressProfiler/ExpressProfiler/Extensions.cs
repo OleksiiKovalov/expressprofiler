@@ -1,11 +1,11 @@
-﻿using PoorMansTSqlFormatterRedux;
+﻿using PoorMansTSqlFormatterLib;
 using System;
 
 namespace ExpressProfiler
 {
 	internal static class Extensions
 	{
-		static Lazy<SqlFormattingManager> SqlFormattingManager = new Lazy<PoorMansTSqlFormatterRedux.SqlFormattingManager>();
+		static Lazy<SqlFormattingManager> SqlFormattingManager = new Lazy<PoorMansTSqlFormatterLib.SqlFormattingManager>();
 
 		public static string ParseSql(this string text)
 		{
