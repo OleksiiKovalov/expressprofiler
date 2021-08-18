@@ -4,7 +4,7 @@
 
   <?define ProductCode="774C1515-6932-4F95-9DE9-F2066DAE99B9"?>
   <?define UpgradeCode="E526188E-0633-4D73-A5BD-FFDC5B2FF828"?>
-  <?define Manufacturer="SQL Code Guard Team"?>
+  <?define Manufacturer="Oleksii Kovalov"?>
   <?define ProductVersion="!(bind.FileVersion.ExpressProfilerexe)" ?>
   <?define ProductName="ExpressProfiler $(var.ProductVersion)" ?>
 
