@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressProfiler", "ExpressProfiler\ExpressProfiler.csproj", "{74D3E3A1-9DBC-4880-841C-FA5583611A73}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ExpressProfiler.EcosystemInstall", "ExpressProfiler.EcosystemInstall\ExpressProfiler.EcosystemInstall.wixproj", "{F672F413-059F-4748-A3C1-0C6A43BA08D6}"
@@ -8,21 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressProfiler.Ecosystem", "ExpressProfiler.Ecosystem\ExpressProfiler.Ecosystem.csproj", "{543AD465-4B97-4000-B0B0-D383403E005D}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs11
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ExpressProfiler\\ExpressProfiler.csproj
-		SccProjectName1 = ExpressProfiler
-		SccLocalPath1 = ExpressProfiler
-		SccProjectUniqueName2 = ExpressProfiler.EcosystemInstall\\ExpressProfiler.EcosystemInstall.wixproj
-		SccProjectName2 = ExpressProfiler.EcosystemInstall
-		SccLocalPath2 = ExpressProfiler.EcosystemInstall
-		SccProjectUniqueName3 = ExpressProfiler.Ecosystem\\ExpressProfiler.Ecosystem.csproj
-		SccProjectName3 = ExpressProfiler.Ecosystem
-		SccLocalPath3 = ExpressProfiler.Ecosystem
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -49,21 +36,20 @@ Global
 		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Debug|x86.Build.0 = Debug|x86
 		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Release|Any CPU.ActiveCfg = Release|x86
 		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Release|x86.ActiveCfg = Release|x86
 		{F672F413-059F-4748-A3C1-0C6A43BA08D6}.Release|x86.Build.0 = Release|x86
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{543AD465-4B97-4000-B0B0-D383403E005D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{543AD465-4B97-4000-B0B0-D383403E005D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{543AD465-4B97-4000-B0B0-D383403E005D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{543AD465-4B97-4000-B0B0-D383403E005D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E96AA8A-586D-441D-AC41-EF04DF55F97B}
 	EndGlobalSection
 EndGlobal

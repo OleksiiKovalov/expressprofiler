@@ -37,8 +37,8 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RedGate.SIPFrameworkShared">
-      <HintPath>..\packages\RedGate.SIPFrameworkShared.1.0.1.241\lib\RedGate.SIPFrameworkShared.dll</HintPath>
+    <Reference Include="RedGate.SIPFrameworkShared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f465a1c156d4d57, processorArchitecture=MSIL">
+      <HintPath>..\packages\RedGate.SIPFrameworkShared.1.1.400\lib\RedGate.SIPFrameworkShared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -50,10 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Icon.png" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

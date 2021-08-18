@@ -1396,7 +1396,7 @@ namespace ExpressProfiler
 			string aboutMsgOrig = String.Format("{0} nhttps://expressprofiler.codeplex.com/ \n Filter Icon: http://www.softicons.com/toolbar-icons/iconza-light-blue-icons-by-turbomilk/filter-icon", versionString);
 
 			StringBuilder aboutMsg = new StringBuilder();
-			aboutMsg.AppendLine(versionString + "\nhttps://expressprofiler.codeplex.com/");
+			aboutMsg.AppendLine(versionString + "\nhttps://github.com/OleksiiKovalov/expressprofiler");
 			aboutMsg.AppendLine();
 			aboutMsg.AppendLine("Filter Icon Downloaded From:");
 			aboutMsg.AppendLine("    http://www.softicons.com/toolbar-icons/iconza-light-blue-icons-by-turbomilk/filter-icon");
