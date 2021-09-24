@@ -121,7 +121,7 @@
   <data name="imStart" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABkSURBVDhPYxicYMrMvP9QJnng3LUd/1t64sk3ZMrqiv/n
+        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABkSURBVDhPYxicYMrMvP9QJnng3LUd/1t64sk3ZMrqiv/n
         vu8l3xCQAVPu9ZBvyNwpdWADYJhkQ8AugLrCf7YTGFdkuxFvCMwAsjSDAEWaQQBmAFmaQQAUaGRrBgGK
         NA81wMAAAP9qXIrkhO09AAAAAElFTkSuQmCC
 </value>
@@ -129,7 +129,7 @@
   <data name="imScroll" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFRSURBVDhPY6Aa6Fjx8j86Lp3z8n/GlDf/M3of/g9tu//f
+        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAFRSURBVDhPY6Aa6Fjx8j86Lp3z8n/GlDf/M3of/g9tu//f
         v/r+f9viJ2AM1YYAIA2rjv78P23HXzhuW/0HjKuX/vqfN/s7HHuU3MQ0oHPrH7CtU9Y+AdsMth2LzSBs
         lnIK04DFW89hCkLB9+///78H4mdA4t6z7/+tvLJxG7D/7L3/MAzibz96/f/Wvdf+r9lzHWzA1n1n8BuA
         DtBtX7f1KGEXgGwFYZBmkM1rgXLI4QLCSfVoFqK7AN3myr4n8FgCxYxX8UFUA5auPQoWQPczyOCpqy+D
@@ -141,7 +141,7 @@
   <data name="imClear" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADhSURBVDhPYxj8oH3Orv81k7b9T6tb9r+gbeN/qDBxAKQZ
+        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAADhSURBVDhPYxj8oH3Orv81k7b9T6tb9r+gbeN/qDBxAKQZ
         Br5///5/+9HrYIMgsgQAimYgfv/+G5jeuvcaYUOQNYN0PXv//f+Ne2/AGAT8UjtwG4DqbEzNle2z/1t5
         JWM3gJDNIM3ZVZP/q1gFYRpAjM0wzd1zT6IaANIM0gQD2DSDAg6rZhAACT579v3/vWfvwZpBhr2Hmgiz
         Wc3KC7tmEAAlkLVbz/1fDMSguAbZDNIP0gzCeDXDAChqQDaBFILwlKX7wJpxOhsbALnALbL8f1BKBZjm
@@ -151,25 +151,27 @@
   <data name="imStop" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABiSURBVDhPYximYIOBxf+Dzm5wDOLDMFQJfgDS9LysDAPf
+        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABiSURBVDhPYximYIOBxf+Dzm5wDOLDMFQJfgDS9LysDAPf
         y84mzoDL4RFYNRNtALoLYJrvJSeTbgBCc/b/a6QagGwzCIO8BlWCH4AMQNYMsvlaFDkGQJ0N00y0AaOA
         FMDAAADj6ZD8CGtfSAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Application" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Application.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="imPause" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACBSURBVDhPYxiGQMFr2n/r5M3/WUw7/kOFGEBskLhL6mq4
+        YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAACBSURBVDhPYxiGQMFr2n/r5M3/WUw7/kOFGEBskLhL6mq4
         GE4AUtgz5/9/EafJcMUgNkhMK3A+cQZU9j3BMAAkRrQBSfXnMAwAiYHkoEK4AUiRR/ZOjDAAiRFtALZA
         BIkRbQAIoxsAEkP2Fk4AUgTWrJqHUAxkg8SIisZRQCpgYAAAxaFj8h9E5GYAAAAASUVORK5CYII=
 </value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="filter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\filter.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="imNote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Notes.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
